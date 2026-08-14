@@ -1,36 +1,42 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Signet
 
-## Getting Started
+Certificates, forged locally. A privacy-first workshop for self-signed TLS certificates, mTLS client certificates, and CSRs.
 
-First, run the development server:
+Private keys, certificates, and PFX files are generated **entirely in the browser**. Signet never stores them.
+
+## Demo login
+
+- Email: `demo@signet.dev`
+- Password: `signet`
+- Or continue as a guest — the generator does not require an account.
+
+## Stack
+
+- Next.js 16 (App Router) + TypeScript
+- Tailwind CSS v4
+- `node-forge` for X.509 / CSR / PKCS#12
+- `next-themes` for dark / light mode
+
+## Develop
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## What is stored
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Data | Where |
+| --- | --- |
+| Certificates, private keys, CSRs, PFX | Never. In-memory for the current tab only. |
+| Dummy accounts | `localStorage` on this device |
+| History | Metadata only (CN, dates, fingerprint) in `localStorage` |
 
-## Learn More
+## Scripts
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `npm run dev` — development server
+- `npm run build` — production build
+- `npm run start` — serve the production build
+- `npm run lint` — ESLint
