@@ -39,6 +39,17 @@ export function GeneratorApp() {
       setPhase("Signing the certificate…");
       incrementUsage(user);
       recordGeneration(next);
+      if (user && user.id !== "guest") {
+        await fetch("/api/certs/record", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            certType: next.type,
+            commonName: next.commonName,
+            fingerprintSha256: next.fingerprintSha256,
+          }),
+        });
+      }
       if (next.type === "root-ca" && next.certificatePem && next.privateKeyPem) {
         const ca = {
           name: next.commonName,

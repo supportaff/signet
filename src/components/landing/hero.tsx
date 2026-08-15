@@ -18,15 +18,15 @@ export function Hero() {
             className="display animate-rise mt-6 max-w-xl text-5xl text-ink sm:text-6xl lg:text-7xl"
             style={{ animationDelay: "80ms" }}
           >
-            Certificates, forged locally.
+            Free self-signed SSL & CSR generator.
           </h1>
           <p
             className="animate-rise mt-6 max-w-lg text-lg leading-relaxed text-ink-soft"
             style={{ animationDelay: "140ms" }}
           >
-            Root CAs, host certificates, self-signed TLS, mTLS, and CSRs —
-            generated entirely in your browser. We never see your keys. We
-            couldn&apos;t if we wanted to.
+            Create a localhost HTTPS certificate, Root CA, host cert, mTLS
+            client certificate, or CSR in your browser. Private keys never
+            upload. An OpenSSL alternative that stays on your device.
           </p>
           <div
             className="animate-rise mt-8 flex flex-col gap-3 sm:flex-row"
@@ -36,8 +36,8 @@ export function Hero() {
               Generate a certificate
               <ArrowRight className="h-4 w-4" />
             </Link>
-            <Link href="/login" className={cn(buttonVariants({ variant: "outline", size: "lg" }))}>
-              Try the demo account
+            <Link href="/tools" className={cn(buttonVariants({ variant: "outline", size: "lg" }))}>
+              Free SSL tools
             </Link>
           </div>
           <div className="mt-10 grid gap-4 sm:grid-cols-2">

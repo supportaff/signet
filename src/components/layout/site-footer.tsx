@@ -5,21 +5,30 @@ const columns = [
   {
     title: "Product",
     links: [
-      { href: "/generate", label: "Generator" },
+      { href: "/generate", label: "SSL certificate generator" },
       { href: "/pricing", label: "Pricing" },
-      { href: "/#how-it-works", label: "How it works" },
-      { href: "/#certificates", label: "Certificate guide" },
-      { href: "/#best-practices", label: "Best practices" },
+      { href: "/#certificates", label: "Certificate types" },
       { href: "/dashboard", label: "Dashboard" },
     ],
   },
   {
-    title: "Company",
+    title: "Free tools",
     links: [
+      { href: "/tools", label: "All tools" },
+      { href: "/tools/decode-certificate", label: "Decode SSL certificate" },
+      { href: "/tools/decode-csr", label: "Decode CSR" },
+      { href: "/tools/openssl", label: "OpenSSL commands" },
+    ],
+  },
+  {
+    title: "Guides",
+    links: [
+      { href: "/guides", label: "All guides" },
+      { href: "/guides/self-signed-ssl-localhost", label: "Localhost HTTPS" },
+      { href: "/guides/generate-csr-online", label: "Generate a CSR" },
+      { href: "/guides/local-certificate-authority", label: "Local CA" },
       { href: "/about", label: "About" },
-      { href: "/contact", label: "Contact" },
       { href: "/privacy", label: "Privacy" },
-      { href: "/terms", label: "Terms" },
     ],
   },
 ];
@@ -27,7 +36,7 @@ const columns = [
 export function SiteFooter() {
   return (
     <footer className="border-t border-line bg-bg-muted">
-      <div className="mx-auto grid max-w-6xl gap-10 px-5 py-14 md:grid-cols-[1.4fr_1fr_1fr]">
+      <div className="mx-auto grid max-w-6xl gap-10 px-5 py-14 md:grid-cols-[1.3fr_1fr_1fr_1fr]">
         <div>
           <Logo />
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted">

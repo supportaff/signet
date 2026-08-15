@@ -4,6 +4,7 @@ import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { Providers } from "@/components/layout/providers";
 import { site } from "@/lib/site";
+import { seoKeywords } from "@/lib/seo";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -25,29 +26,27 @@ const newsreader = Newsreader({
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: `${site.name} — ${site.tagline}`,
+    default: "Signet — Free Self-Signed SSL, CSR & mTLS Certificate Generator",
     template: `%s · ${site.name}`,
   },
   description: site.description,
-  keywords: [
-    "self-signed certificate",
-    "CSR generator",
-    "client certificate",
-    "mTLS",
-    "browser PKI",
-    "private key never uploaded",
-  ],
+  keywords: seoKeywords,
   authors: [{ name: "Signet" }],
+  creator: "Signet",
+  category: "security",
+  robots: { index: true, follow: true },
+  alternates: { canonical: site.url },
   openGraph: {
-    title: `${site.name} — ${site.tagline}`,
+    title: "Signet — Free Self-Signed SSL, CSR & mTLS Certificate Generator",
     description: site.description,
     url: site.url,
     siteName: site.name,
     type: "website",
+    locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    title: `${site.name} — ${site.tagline}`,
+    title: "Signet — Free Self-Signed SSL, CSR & mTLS Certificate Generator",
     description: site.description,
   },
 };

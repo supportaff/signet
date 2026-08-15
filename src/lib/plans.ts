@@ -2,10 +2,45 @@ import type { AuthUser } from "@/lib/auth";
 
 export const PLAN_LIMITS = {
   free: 3,
-  studio: 25,
+  plus: 25,
+  studio: 50,
 } as const;
 
 export type PlanId = keyof typeof PLAN_LIMITS;
+
+export const PLAN_CATALOG: {
+  id: PlanId;
+  name: string;
+  price: string;
+  cadence: string;
+  highlight: string;
+  blurb: string;
+}[] = [
+  {
+    id: "free",
+    name: "Free",
+    price: "$0",
+    cadence: "forever",
+    highlight: "3 certificates",
+    blurb: "Full local generation. No account required.",
+  },
+  {
+    id: "plus",
+    name: "Plus",
+    price: "$5",
+    cadence: "per month",
+    highlight: "25 certificates",
+    blurb: "For regular lab and staging work.",
+  },
+  {
+    id: "studio",
+    name: "Studio",
+    price: "$12",
+    cadence: "per month",
+    highlight: "50 certificates",
+    blurb: "For people who mint certificates every week.",
+  },
+];
 
 export const USAGE_STORAGE_KEY = "signet.usage.v1";
 
@@ -37,11 +72,21 @@ function writeUsage(map: Record<string, number>) {
 }
 
 export function planOf(user: AuthUser | null): PlanId {
-  return user?.plan === "studio" ? "studio" : "free";
+  if (user?.plan === "studio") return "studio";
+  if (user?.plan === "plus") return "plus";
+  return "free";
 }
 
 export function planLabel(plan: PlanId) {
-  return plan === "studio" ? "Studio" : "Free";
+  if (plan === "studio") return "Studio";
+  if (plan === "plus") return "Plus";
+  return "Free";
+}
+
+export function nextPlan(plan: PlanId): Exclude<PlanId, "free"> | null {
+  if (plan === "free") return "plus";
+  if (plan === "plus") return "studio";
+  return null;
 }
 
 export function usageKey(user: AuthUser | null) {

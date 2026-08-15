@@ -76,9 +76,15 @@ export function SiteHeader() {
                 {item.label}
               </Link>
             ))}
-            <Link href="/login" onClick={() => setOpen(false)}>
-              Sign in
-            </Link>
+            {isAuthenticated ? (
+              <Link href="/dashboard" onClick={() => setOpen(false)}>
+                {user?.name.split(" ")[0] ?? "Dashboard"}
+              </Link>
+            ) : (
+              <Link href="/login" onClick={() => setOpen(false)}>
+                Sign in
+              </Link>
+            )}
             <Link
               href="/generate"
               onClick={() => setOpen(false)}

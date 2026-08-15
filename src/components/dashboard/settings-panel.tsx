@@ -7,14 +7,16 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/hooks/use-auth";
 import { useQuota } from "@/hooks/use-quota";
+import { openBillingPortal, startCheckout } from "@/lib/billing-client";
 import { updateProfile } from "@/lib/auth";
 import { clearHistory } from "@/lib/history";
-import { PLAN_LIMITS, planLabel } from "@/lib/plans";
+import { PLAN_LIMITS, nextPlan, planLabel } from "@/lib/plans";
 
 export function SettingsPanel() {
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const { quota } = useQuota();
   const [name, setName] = useState(user?.name ?? "");
+  const [busy, setBusy] = useState(false);
 
   useEffect(() => {
     if (user?.name) setName(user.name);
@@ -23,7 +25,21 @@ export function SettingsPanel() {
   const onSave = (event: FormEvent) => {
     event.preventDefault();
     updateProfile({ name });
-    toast.success("Profile updated on this device.");
+    toast.success("Display name updated on this device.");
+  };
+
+  const checkout = async (plan: "plus" | "studio") => {
+    if (!isAuthenticated || user?.id === "guest") {
+      window.location.href = "/login?next=/dashboard/settings";
+      return;
+    }
+    setBusy(true);
+    try {
+      await startCheckout(plan);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Checkout failed.");
+      setBusy(false);
+    }
   };
 
   return (
@@ -32,7 +48,8 @@ export function SettingsPanel() {
         <p className="eyebrow">Account</p>
         <h1 className="mt-2 font-serif text-4xl tracking-tight">Settings</h1>
         <p className="mt-2 max-w-xl text-sm text-muted">
-          These preferences stay in local storage. Signet still has no copy of your keys.
+          Signed-in users are stored in Supabase. Plans change when Dodo Payments confirms a subscription.
+          Private keys are still never uploaded.
         </p>
       </div>
 
@@ -50,20 +67,40 @@ export function SettingsPanel() {
           <p className="mt-1.5 text-sm text-ink-soft">
             {planLabel(quota.plan)} · {quota.used} of {quota.limit} certificates used
           </p>
-          {quota.plan === "free" ? (
-            <Button
-              type="button"
-              variant="wax"
-              size="sm"
-              className="mt-3"
-              onClick={() => {
-                updateProfile({ plan: "studio" });
-                toast.success(`Studio unlocked. Cap is now ${PLAN_LIMITS.studio} certificates.`);
-              }}
-            >
-              Upgrade to Studio (25 certs)
-            </Button>
-          ) : null}
+          <div className="mt-3 flex flex-wrap gap-2">
+            {nextPlan(quota.plan) ? (
+              <Button
+                type="button"
+                variant="wax"
+                size="sm"
+                disabled={busy}
+                onClick={() => checkout(nextPlan(quota.plan)!)}
+              >
+                Upgrade to {planLabel(nextPlan(quota.plan)!)} ({PLAN_LIMITS[nextPlan(quota.plan)!]} certs)
+              </Button>
+            ) : null}
+            {quota.plan === "free" ? (
+              <Button type="button" variant="outline" size="sm" disabled={busy} onClick={() => checkout("studio")}>
+                Studio · $12
+              </Button>
+            ) : null}
+            {quota.plan !== "free" ? (
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={async () => {
+                  try {
+                    await openBillingPortal();
+                  } catch (error) {
+                    toast.error(error instanceof Error ? error.message : "Portal unavailable.");
+                  }
+                }}
+              >
+                Manage billing
+              </Button>
+            ) : null}
+          </div>
         </div>
         <Button type="submit" variant="outline">
           Save changes

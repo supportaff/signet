@@ -1,11 +1,11 @@
-const faqs = [
+export const faqs = [
   {
     q: "Do you store my certificate or private key?",
     a: "No. Generation happens in your browser. Signet’s servers never receive certificates, private keys, CSRs, or PFX files. If you sign in, we can keep a local metadata history on this device — names, dates, fingerprints — not the secrets.",
   },
   {
     q: "How many certificates can I generate?",
-    a: "Free includes 3 certificates. Studio includes 25. The count is stored on this device and is not reset by deleting history. Private keys are still never uploaded. Upgrade from the generator or settings when you hit the cap.",
+    a: "Free includes 3 certificates. Plus is $5/month for 25. Studio is $12/month for 50. Signed-in usage is stored in Supabase as metadata only. Checkout is Dodo Payments. Private keys are still never uploaded.",
   },
   {
     q: "Can I use this without an account?",
@@ -30,6 +30,14 @@ const faqs = [
   {
     q: "Is this a certificate authority?",
     a: "No. Signet does not operate a public CA and does not issue publicly trusted certificates. It helps you create keys and certificates on your own machine.",
+  },
+  {
+    q: "How do I generate a self-signed SSL certificate for localhost?",
+    a: "Use the generator, keep the common name as localhost, and include localhost plus 127.0.0.1 in the SANs. Download the .crt and .key. Browsers will warn until you trust the certificate or a local Root CA.",
+  },
+  {
+    q: "Is this a replacement for OpenSSL?",
+    a: "For interactive work, yes — Signet produces the same kinds of PEM, CSR, and PFX files. For scripts and CI you may still want the OpenSSL CLI. We publish the equivalent commands on the OpenSSL tools page.",
   },
 ];
 

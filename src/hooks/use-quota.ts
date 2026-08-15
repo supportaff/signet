@@ -13,23 +13,52 @@ const empty: Quota = {
 };
 
 export function useQuota() {
-  const { user, ready: authReady } = useAuth();
+  const { user, ready: authReady, isAuthenticated } = useAuth();
   const [quota, setQuota] = useState<Quota>(empty);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    const sync = () => {
+    let cancelled = false;
+
+    const applyLocal = () => {
       setQuota(getQuota(user));
       setReady(true);
     };
-    sync();
-    window.addEventListener("signet-quota", sync);
-    window.addEventListener("signet-auth", sync);
-    return () => {
-      window.removeEventListener("signet-quota", sync);
-      window.removeEventListener("signet-auth", sync);
+
+    const load = async () => {
+      if (!isAuthenticated || user?.id === "guest") {
+        applyLocal();
+        return;
+      }
+      try {
+        const response = await fetch("/api/me");
+        const data = (await response.json()) as { configured?: boolean; quota?: Quota };
+        if (cancelled) return;
+        if (data.configured && data.quota) {
+          setQuota(data.quota);
+        } else {
+          applyLocal();
+          return;
+        }
+      } catch {
+        if (!cancelled) applyLocal();
+        return;
+      }
+      setReady(true);
     };
-  }, [user]);
+
+    const onAuth = () => {
+      void load();
+    };
+    void load();
+    window.addEventListener("signet-quota", applyLocal);
+    window.addEventListener("signet-auth", onAuth);
+    return () => {
+      cancelled = true;
+      window.removeEventListener("signet-quota", applyLocal);
+      window.removeEventListener("signet-auth", onAuth);
+    };
+  }, [user, isAuthenticated]);
 
   return { quota, ready: ready && authReady, user };
 }

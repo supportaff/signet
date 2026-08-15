@@ -4,13 +4,14 @@ import Link from "next/link";
 import { toast } from "sonner";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { useQuota } from "@/hooks/use-quota";
-import { updateProfile } from "@/lib/auth";
-import { planLabel } from "@/lib/plans";
+import { startCheckout } from "@/lib/billing-client";
+import { PLAN_LIMITS, nextPlan, planLabel } from "@/lib/plans";
 import { cn } from "@/lib/utils";
 
 export function QuotaBar() {
   const { quota, user } = useQuota();
   const ratio = quota.limit === 0 ? 0 : Math.min(1, quota.used / quota.limit);
+  const upgrade = nextPlan(quota.plan);
 
   return (
     <div className="mb-6 flex flex-col gap-3 rounded-2xl border border-line bg-bg-muted/70 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
@@ -29,16 +30,16 @@ export function QuotaBar() {
           />
         </div>
       </div>
-      {quota.plan === "free" ? (
+      {upgrade ? (
         <Link href="/pricing" className={cn(buttonVariants({ variant: "outline", size: "sm" }), "shrink-0")}>
-          Studio · 25 certs
+          {planLabel(upgrade)} · {PLAN_LIMITS[upgrade]} certs
         </Link>
       ) : (
         <p className="text-xs text-muted">{quota.remaining} remaining</p>
       )}
       {!user ? (
         <Link href="/login?next=/generate" className="text-xs text-muted hover:text-ink">
-          Sign in to keep Studio
+          Sign in to keep your plan
         </Link>
       ) : null}
     </div>
@@ -47,14 +48,18 @@ export function QuotaBar() {
 
 export function LimitReached() {
   const { quota, user } = useQuota();
+  const upgrade = nextPlan(quota.plan);
 
-  const upgrade = () => {
-    if (!user) {
-      window.location.href = "/login?next=/generate";
+  const checkout = async (plan: "plus" | "studio") => {
+    if (!user || user.id === "guest") {
+      window.location.href = `/login?next=/pricing`;
       return;
     }
-    updateProfile({ plan: "studio" });
-    toast.success("Studio unlocked on this device. You can generate up to 25 certificates.");
+    try {
+      await startCheckout(plan);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Checkout failed.");
+    }
   };
 
   return (
@@ -65,13 +70,20 @@ export function LimitReached() {
       </h2>
       <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-muted">
         {quota.plan === "free"
-          ? "Free includes three certificates. Studio raises the cap to 25. Keys still never leave this browser."
-          : "Studio tops out at 25 certificates on this device. That is the ceiling for this demo."}
+          ? "Free includes 3 certificates. Plus is $5 for 25. Studio is $12 for 50. Checkout runs through Dodo Payments."
+          : quota.plan === "plus"
+            ? "Plus includes 25 certificates. Studio is $12 for 50."
+            : "Studio tops out at 50 certificates."}
       </p>
       <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
+        {upgrade ? (
+          <Button variant="wax" onClick={() => checkout(upgrade)}>
+            Upgrade to {planLabel(upgrade)} · ${upgrade === "studio" ? "12" : "5"}
+          </Button>
+        ) : null}
         {quota.plan === "free" ? (
-          <Button variant="wax" onClick={upgrade}>
-            Upgrade to Studio
+          <Button variant="outline" onClick={() => checkout("studio")}>
+            Studio · $12
           </Button>
         ) : null}
         <Link href="/pricing" className={cn(buttonVariants({ variant: "outline" }))}>

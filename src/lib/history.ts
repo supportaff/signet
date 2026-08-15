@@ -40,7 +40,7 @@ export function toMetadata(bundle: GeneratedCertificate): CertificateMetadata {
 export function recordGeneration(bundle: GeneratedCertificate) {
   const items = readHistory().filter((item) => item.id !== bundle.id);
   items.unshift(toMetadata(bundle));
-  writeHistory(items.slice(0, 25));
+  writeHistory(items.slice(0, 50));
 }
 
 export function deleteHistoryItem(id: string) {

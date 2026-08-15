@@ -1,0 +1,8 @@
+# Signet
+
+Signet is a free online SSL certificate generator. It creates self-signed certificates, localhost HTTPS certificates, CSRs, Root CAs, host certificates, and mTLS client certificates entirely in the browser. Private keys are never uploaded.
+
+Site: https://signet-lemon.vercel.app
+Generator: https://signet-lemon.vercel.app/generate
+Tools: https://signet-lemon.vercel.app/tools
+Guides: https://signet-lemon.vercel.app/guides

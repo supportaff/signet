@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { ReactNode, useEffect } from "react";
 import { LayoutDashboard, LogOut, Plus, Settings } from "lucide-react";
+import { useClerk } from "@clerk/nextjs";
 import { useAuth } from "@/hooks/use-auth";
 import { clearSession, isGuest } from "@/lib/auth";
 import { cn } from "@/lib/utils";
@@ -16,6 +17,7 @@ const links = [
 
 export function DashboardShell({ children }: { children: ReactNode }) {
   const { user, ready } = useAuth();
+  const { signOut } = useClerk();
   const pathname = usePathname();
   const router = useRouter();
 
@@ -57,8 +59,9 @@ export function DashboardShell({ children }: { children: ReactNode }) {
           <button
             type="button"
             className="flex w-full items-center gap-2 rounded-2xl px-3 py-2.5 text-left text-sm text-ink-soft hover:bg-bg-muted"
-            onClick={() => {
+            onClick={async () => {
               clearSession();
+              await signOut({ redirectUrl: "/" });
               router.push("/");
             }}
           >
