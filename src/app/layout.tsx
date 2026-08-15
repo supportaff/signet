@@ -36,7 +36,6 @@ export const metadata: Metadata = {
   creator: "SelfSignedCert",
   category: "security",
   robots: { index: true, follow: true },
-  alternates: { canonical: site.url },
   openGraph: {
     title: "SelfSignedCert — Free Self-Signed SSL Certificate Generator",
     description: site.description,

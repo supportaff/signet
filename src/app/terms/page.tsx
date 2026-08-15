@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import { site } from "@/lib/site";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
   title: "Terms of Service",
   description:
     "Terms for using SelfSignedCert at selfsignedcert.com, a client-side self-signed SSL certificate generator.",
-};
+  path: "/terms",
+});
 
 export default function TermsPage() {
   return (

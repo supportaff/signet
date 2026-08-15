@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import { ContactForm } from "@/components/contact/contact-form";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
   title: "Contact",
   description: "Contact SelfSignedCert support. Never send a private key — we would refuse it.",
-};
+  path: "/contact",
+});
 
 export default function ContactPage() {
   return (

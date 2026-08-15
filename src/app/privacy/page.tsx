@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import { site } from "@/lib/site";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
   title: "Privacy Policy",
   description:
     "SelfSignedCert does not store certificates, private keys, CSRs, or PFX files. Generation is entirely client-side at selfsignedcert.com.",
-};
+  path: "/privacy",
+});
 
 export default function PrivacyPage() {
   return (
