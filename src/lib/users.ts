@@ -46,15 +46,39 @@ function normalizeAccount(row: SignetAccount): SignetAccount {
   };
 }
 
-export function accountQuota(account: Pick<SignetAccount, "plan" | "certs_used">) {
+export function periodStartIso(now = new Date()) {
+  return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1)).toISOString();
+}
+
+export function accountQuota(
+  account: Pick<SignetAccount, "plan" | "certs_used">,
+  usedThisPeriod?: number,
+) {
   const limit = PLAN_LIMITS[account.plan] ?? PLAN_LIMITS.free;
+  const used = usedThisPeriod ?? account.certs_used;
   return {
     plan: account.plan,
     limit,
-    used: account.certs_used,
-    remaining: Math.max(0, limit - account.certs_used),
-    allowed: account.certs_used < limit,
+    used,
+    remaining: Math.max(0, limit - used),
+    allowed: used < limit,
+    period: periodStartIso().slice(0, 7),
   };
+}
+
+export async function usageThisPeriod(authId: string) {
+  if (!isSupabaseConfigured()) return 0;
+  const supabase = getSupabaseAdmin();
+  const { count, error } = await supabase
+    .from("signet_certificate_events")
+    .select("*", { count: "exact", head: true })
+    .eq("auth_id", authId)
+    .gte("created_at", periodStartIso());
+  if (error) {
+    if (isMissingTable(error)) return 0;
+    throw error;
+  }
+  return count ?? 0;
 }
 
 export async function getTrackingStatus(): Promise<{ status: TrackingStatus; message?: string }> {
@@ -220,12 +244,16 @@ export async function recordCertificateEvent(input: {
     await upsertSignetUser({ authId: input.authId });
   }
   const current = existing ?? (await getSignetUser(input.authId));
-  const quota = accountQuota({
-    plan: current?.plan ?? "free",
-    certs_used: current?.certs_used ?? 0,
-  });
+  const usedThisPeriod = await usageThisPeriod(input.authId);
+  const quota = accountQuota(
+    {
+      plan: current?.plan ?? "free",
+      certs_used: current?.certs_used ?? 0,
+    },
+    usedThisPeriod,
+  );
   if (!quota.allowed) {
-    throw new Error(`You've used all ${quota.limit} certificates on the ${quota.plan} plan.`);
+    throw new Error(`You've used all ${quota.limit} certificates on the ${quota.plan} plan this month.`);
   }
 
   const { error: eventError } = await supabase.from("signet_certificate_events").insert({

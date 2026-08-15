@@ -9,7 +9,7 @@ export const faqs = [
   },
   {
     q: "Can I use this without an account?",
-    a: "Yes. Guest mode is first-class. An account is only for remembering metadata and settings on this device.",
+    a: "You can browse tools and guides without signing in. Generating a certificate requires Google sign-in so we can apply the monthly Free / Plus / Studio limits. Private keys still never leave the browser.",
   },
   {
     q: "Which certificate type should I generate?",

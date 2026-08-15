@@ -43,7 +43,7 @@ export function DashboardOverview() {
         <Stat
           label="Generated"
           value={`${quota.used} / ${quota.limit}`}
-          hint={planLabel(quota.plan)}
+          hint={`${planLabel(quota.plan)} this month`}
           icon={FileKey2}
         />
         <Stat

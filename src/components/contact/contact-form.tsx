@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { site } from "@/lib/site";
 
 export function ContactForm() {
   const [sent, setSent] = useState(false);
@@ -12,25 +13,26 @@ export function ContactForm() {
   const onSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const payload = {
-      name: String(data.get("name") || ""),
-      email: String(data.get("email") || ""),
-      message: String(data.get("message") || ""),
-      at: new Date().toISOString(),
-    };
-    const existing = JSON.parse(localStorage.getItem("signet.support.v1") || "[]") as unknown[];
-    localStorage.setItem("signet.support.v1", JSON.stringify([payload, ...existing]));
+    const name = String(data.get("name") || "").trim();
+    const email = String(data.get("email") || "").trim();
+    const message = String(data.get("message") || "").trim();
+    const subject = encodeURIComponent(`SelfSignedCert support from ${name}`);
+    const body = encodeURIComponent(`From: ${name} <${email}>\n\n${message}`);
+    window.location.href = `mailto:${site.supportEmail}?subject=${subject}&body=${body}`;
     setSent(true);
-    toast.success("Message saved locally. This demo has no inbox.");
+    toast.success("Your email app should open with the message ready to send.");
   };
 
   if (sent) {
     return (
       <div className="mt-10 rounded-[28px] border border-line bg-surface p-8">
-        <p className="font-serif text-3xl">Received on this device.</p>
+        <p className="font-serif text-3xl">Send it from your inbox.</p>
         <p className="mt-3 text-sm text-muted">
-          Messages go to hello@selfsignedcert.com. This form does not store the
-          note in local storage only.
+          If nothing opened, email{" "}
+          <a className="text-wax hover:underline" href={`mailto:${site.supportEmail}`}>
+            {site.supportEmail}
+          </a>
+          . Do not attach a private key.
         </p>
       </div>
     );
@@ -57,7 +59,7 @@ export function ContactForm() {
         />
       </div>
       <Button type="submit" variant="wax">
-        Send message
+        Open email to {site.supportEmail}
       </Button>
     </form>
   );

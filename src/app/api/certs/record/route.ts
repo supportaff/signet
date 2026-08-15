@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { accountQuota, recordCertificateEvent } from "@/lib/users";
+import { accountQuota, recordCertificateEvent, usageThisPeriod } from "@/lib/users";
 import { isSupabaseConfigured } from "@/lib/supabase/admin";
 import { getSessionUser } from "@/lib/session";
 
@@ -29,7 +29,7 @@ export async function POST(request: Request) {
     return NextResponse.json({
       configured: true,
       account,
-      quota: account ? accountQuota(account) : null,
+      quota: account ? accountQuota(account, await usageThisPeriod(userId)) : null,
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Could not record certificate.";

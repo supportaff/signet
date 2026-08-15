@@ -20,7 +20,7 @@ export function QuotaBar() {
           <span className="font-medium">{planLabel(quota.plan)} plan</span>
           <span className="text-muted">
             {" "}
-            · {quota.used} of {quota.limit} certificates used
+            · {quota.used} of {quota.limit} certificates used this month
           </span>
         </p>
         <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-line">
@@ -70,10 +70,10 @@ export function LimitReached() {
       </h2>
       <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-muted">
         {quota.plan === "free"
-          ? "Free includes 3 certificates. Plus is $5 for 25. Studio is $12 for 50. Checkout runs through Dodo Payments."
+          ? "Free includes 3 certificates this month. Plus is $5 for 25. Studio is $12 for 50."
           : quota.plan === "plus"
-            ? "Plus includes 25 certificates. Studio is $12 for 50."
-            : "Studio tops out at 50 certificates."}
+            ? "Plus includes 25 certificates this month. Studio is $12 for 50."
+            : "Studio tops out at 50 certificates this month."}
       </p>
       <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
         {upgrade ? (

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { accountQuota, upsertSignetUser } from "@/lib/users";
+import { accountQuota, upsertSignetUser, usageThisPeriod } from "@/lib/users";
 import { isSupabaseConfigured } from "@/lib/supabase/admin";
 import { getSessionUser } from "@/lib/session";
 
@@ -21,7 +21,7 @@ export async function POST() {
   return NextResponse.json({
     configured: true,
     account,
-    quota: account ? accountQuota(account) : null,
+    quota: account ? accountQuota(account, await usageThisPeriod(user.id)) : null,
     user,
   });
 }

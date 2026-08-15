@@ -1,10 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
-import { toast } from "sonner";
+import { useSearchParams } from "next/navigation";
 import { buttonVariants } from "@/components/ui/button";
-import { continueAsGuest } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 
 const ERRORS: Record<string, string> = {
@@ -16,7 +14,6 @@ const ERRORS: Record<string, string> = {
 };
 
 export function AuthCard({ mode }: { mode: "login" | "signup" }) {
-  const router = useRouter();
   const params = useSearchParams();
   const next = params.get("next") || "/dashboard";
   const error = params.get("error");
@@ -40,17 +37,6 @@ export function AuthCard({ mode }: { mode: "login" | "signup" }) {
       </Link>
 
       <div className="mt-6 flex flex-col gap-2 border-t border-line pt-5 text-sm text-ink-soft">
-        <button
-          type="button"
-          className="text-left hover:text-ink"
-          onClick={() => {
-            continueAsGuest();
-            toast.success("Continuing as guest.");
-            router.push(next);
-          }}
-        >
-          Continue without an account
-        </button>
         {mode === "login" ? (
           <p>
             New here?{" "}

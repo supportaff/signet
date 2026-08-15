@@ -22,7 +22,7 @@ export const PLAN_CATALOG: {
     price: "$0",
     cadence: "forever",
     highlight: "3 certificates",
-    blurb: "Full local generation. No account required.",
+    blurb: "3 certificates per month. Google sign-in required.",
   },
   {
     id: "plus",

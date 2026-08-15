@@ -1,19 +1,22 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { toast } from "sonner";
 import { CertForm } from "@/components/generator/cert-form";
 import { CertResult } from "@/components/generator/cert-result";
 import { LimitReached, QuotaBar } from "@/components/generator/quota-bar";
+import { buttonVariants } from "@/components/ui/button";
 import { useQuota } from "@/hooks/use-quota";
 import { generateCertificateBundle } from "@/lib/cert/generate";
 import type { CertFormValues, CertType, GeneratedCertificate } from "@/lib/cert/types";
 import { getSessionCa, setSessionCa } from "@/lib/cert/session-ca";
 import { recordGeneration } from "@/lib/history";
-import { assertCanGenerate, incrementUsage } from "@/lib/plans";
+import { incrementUsage } from "@/lib/plans";
+import { cn } from "@/lib/utils";
 
 export function GeneratorApp() {
-  const { quota, user } = useQuota();
+  const { quota, user, ready } = useQuota();
   const [busy, setBusy] = useState(false);
   const [phase, setPhase] = useState("Preparing the forge…");
   const [bundle, setBundle] = useState<GeneratedCertificate | null>(null);
@@ -22,17 +25,17 @@ export function GeneratorApp() {
 
   const onGenerate = async (values: CertFormValues) => {
     const signedIn = Boolean(user && user.id !== "guest");
+    if (!signedIn) {
+      window.location.href = "/login?next=/generate";
+      return;
+    }
     try {
-      if (signedIn) {
-        const me = await fetch("/api/me");
-        const data = (await me.json()) as { configured?: boolean; quota?: { allowed?: boolean; limit?: number } };
-        if (data.configured && data.quota && !data.quota.allowed) {
-          toast.error("You've used this plan's certificate limit. Upgrade to continue.");
-          window.dispatchEvent(new Event("signet-auth"));
-          return;
-        }
-      } else {
-        assertCanGenerate(user);
+      const me = await fetch("/api/me");
+      const data = (await me.json()) as { configured?: boolean; quota?: { allowed?: boolean; limit?: number } };
+      if (data.configured && data.quota && !data.quota.allowed) {
+        toast.error("You've used this plan's certificate limit this month. Upgrade to continue.");
+        window.dispatchEvent(new Event("signet-auth"));
+        return;
       }
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Limit reached.");
@@ -59,7 +62,7 @@ export function GeneratorApp() {
           }),
         });
         if (recorded.status === 402) {
-          toast.error("You've used this plan's certificate limit. Upgrade to continue.");
+          toast.error("You've used this plan's certificate limit this month. Upgrade to continue.");
           window.dispatchEvent(new Event("signet-auth"));
           return;
         }
@@ -84,6 +87,26 @@ export function GeneratorApp() {
       setBusy(false);
     }
   };
+
+  if (!ready) {
+    return <div className="h-64 rounded-[28px] border border-line skeleton" />;
+  }
+
+  if (!user || user.id === "guest") {
+    return (
+      <div className="rounded-[28px] border border-line bg-surface px-6 py-12 text-center shadow-lift">
+        <p className="eyebrow">Sign in required</p>
+        <h2 className="mt-3 font-serif text-3xl tracking-tight">Generate with a Google account.</h2>
+        <p className="mx-auto mt-3 max-w-md text-sm text-muted">
+          Free includes 3 certificates per month. Signing in is how we apply the limit.
+          Private keys still never leave this browser.
+        </p>
+        <Link href="/login?next=/generate" className={cn(buttonVariants({ variant: "wax" }), "mt-6")}>
+          Continue with Google
+        </Link>
+      </div>
+    );
+  }
 
   if (bundle) {
     return (

@@ -6,13 +6,20 @@ export const dynamic = "force-dynamic";
 export const maxDuration = 15;
 
 const WINDOW_MS = 60_000;
-const LIMIT = 12;
+const LIMIT = 8;
 const buckets = new Map<string, { count: number; reset: number }>();
 
 function clientIp(request: Request) {
+  const vercel = request.headers.get("x-vercel-forwarded-for");
+  if (vercel) return vercel.split(",")[0]?.trim() || "unknown";
+  const real = request.headers.get("x-real-ip");
+  if (real) return real.trim();
   const forwarded = request.headers.get("x-forwarded-for");
-  if (forwarded) return forwarded.split(",")[0]?.trim() || "unknown";
-  return request.headers.get("x-real-ip") || "unknown";
+  if (forwarded) {
+    const parts = forwarded.split(",").map((part) => part.trim()).filter(Boolean);
+    return parts.at(-1) || "unknown";
+  }
+  return "unknown";
 }
 
 function allow(ip: string) {

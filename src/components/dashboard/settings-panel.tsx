@@ -131,7 +131,7 @@ export function SettingsPanel() {
           <Label>Plan status</Label>
           <p className="mt-1.5 text-sm text-ink-soft">
             {planLabel(quota.plan)} · {account?.plan_status || "active"} · {quota.used} of {quota.limit}{" "}
-            certificates used
+            certificates used this month
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
             {nextPlan(quota.plan) ? (

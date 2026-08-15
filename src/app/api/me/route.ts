@@ -1,5 +1,11 @@
 import { NextResponse } from "next/server";
-import { accountQuota, getSignetUser, getTrackingStatus, upsertSignetUser } from "@/lib/users";
+import {
+  accountQuota,
+  getSignetUser,
+  getTrackingStatus,
+  upsertSignetUser,
+  usageThisPeriod,
+} from "@/lib/users";
 import { isSupabaseConfigured } from "@/lib/supabase/admin";
 import { getSessionUser } from "@/lib/session";
 import { isAdminConfigured, isAdminEmail } from "@/lib/admin";
@@ -40,7 +46,7 @@ export async function GET() {
     configured: true,
     tracking: "ok",
     account,
-    quota: accountQuota(account),
+    quota: accountQuota(account, await usageThisPeriod(user.id)),
     user,
     isAdmin: isAdminEmail(user.email),
     adminConfigured: isAdminConfigured(),
@@ -60,5 +66,9 @@ export async function DELETE(request: Request) {
 
   const { deleteSignetUser } = await import("@/lib/users");
   await deleteSignetUser(user.id);
-  return NextResponse.json({ ok: true });
+  const { SESSION_COOKIE, OAUTH_STATE_COOKIE, sessionCookieOptions } = await import("@/lib/session");
+  const response = NextResponse.json({ ok: true });
+  response.cookies.set(SESSION_COOKIE, "", { ...sessionCookieOptions(0), maxAge: 0 });
+  response.cookies.set(OAUTH_STATE_COOKIE, "", { ...sessionCookieOptions(0), maxAge: 0 });
+  return response;
 }
