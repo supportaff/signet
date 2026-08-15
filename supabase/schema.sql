@@ -1,8 +1,8 @@
--- Signet user tracking. Run this in the Supabase SQL editor.
+-- Signet user tracking. Run this in the Signet Supabase SQL editor.
 -- Stores account + plan + login metadata only. Never store private keys.
 
 create table if not exists public.signet_users (
-  clerk_id text primary key,
+  auth_id text primary key,
   email text,
   name text,
   plan text not null default 'free' check (plan in ('free', 'plus', 'studio')),
@@ -16,12 +16,9 @@ create table if not exists public.signet_users (
   updated_at timestamptz not null default now()
 );
 
-alter table public.signet_users add column if not exists login_count integer not null default 0;
-alter table public.signet_users add column if not exists last_login_at timestamptz;
-
 create table if not exists public.signet_certificate_events (
   id uuid primary key default gen_random_uuid(),
-  clerk_id text not null references public.signet_users (clerk_id) on delete cascade,
+  auth_id text not null references public.signet_users (auth_id) on delete cascade,
   cert_type text not null,
   common_name text,
   fingerprint_sha256 text,
@@ -30,7 +27,7 @@ create table if not exists public.signet_certificate_events (
 
 create table if not exists public.signet_payments (
   id uuid primary key default gen_random_uuid(),
-  clerk_id text,
+  auth_id text,
   dodo_payment_id text,
   dodo_subscription_id text,
   plan text,
@@ -41,19 +38,19 @@ create table if not exists public.signet_payments (
 
 create table if not exists public.signet_login_events (
   id uuid primary key default gen_random_uuid(),
-  clerk_id text not null references public.signet_users (clerk_id) on delete cascade,
+  auth_id text not null references public.signet_users (auth_id) on delete cascade,
   email text,
   created_at timestamptz not null default now()
 );
 
-create index if not exists signet_certificate_events_clerk_idx
-  on public.signet_certificate_events (clerk_id, created_at desc);
+create index if not exists signet_certificate_events_auth_idx
+  on public.signet_certificate_events (auth_id, created_at desc);
 
-create index if not exists signet_payments_clerk_idx
-  on public.signet_payments (clerk_id, created_at desc);
+create index if not exists signet_payments_auth_idx
+  on public.signet_payments (auth_id, created_at desc);
 
-create index if not exists signet_login_events_clerk_idx
-  on public.signet_login_events (clerk_id, created_at desc);
+create index if not exists signet_login_events_auth_idx
+  on public.signet_login_events (auth_id, created_at desc);
 
 create index if not exists signet_users_last_login_idx
   on public.signet_users (last_login_at desc nulls last);

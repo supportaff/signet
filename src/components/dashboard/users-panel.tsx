@@ -52,7 +52,7 @@ export function UsersPanel() {
     const needle = query.trim().toLowerCase();
     if (!needle) return users;
     return users.filter((user) =>
-      [user.email, user.name, user.plan, user.plan_status, user.clerk_id]
+      [user.email, user.name, user.plan, user.plan_status, user.auth_id]
         .filter(Boolean)
         .some((value) => String(value).toLowerCase().includes(needle)),
     );
@@ -153,10 +153,10 @@ export function UsersPanel() {
                 </tr>
               ) : (
                 filtered.map((row) => (
-                  <tr key={row.clerk_id} className="border-t border-line">
+                  <tr key={row.auth_id} className="border-t border-line">
                     <td className="px-5 py-4">
                       <p className="font-medium">{row.name || "Unsigned name"}</p>
-                      <p className="text-xs text-muted">{row.email || row.clerk_id}</p>
+                      <p className="text-xs text-muted">{row.email || row.auth_id}</p>
                     </td>
                     <td className="px-5 py-4">{planLabel(row.plan)}</td>
                     <td className="px-5 py-4">
@@ -171,8 +171,8 @@ export function UsersPanel() {
                       <Button
                         variant="danger"
                         size="sm"
-                        disabled={busyId === row.clerk_id}
-                        onClick={() => void remove(row.clerk_id)}
+                        disabled={busyId === row.auth_id}
+                        onClick={() => void remove(row.auth_id)}
                       >
                         Delete
                       </Button>
@@ -191,7 +191,7 @@ export function UsersPanel() {
           <ul className="mt-4 space-y-2 text-sm">
             {logins.map((login) => (
               <li key={login.id} className="flex justify-between gap-4 text-ink-soft">
-                <span>{login.email || login.clerk_id}</span>
+                <span>{login.email || login.auth_id}</span>
                 <span className="text-muted">{formatDate(login.created_at)}</span>
               </li>
             ))}

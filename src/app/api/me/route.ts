@@ -26,7 +26,7 @@ export async function GET() {
   let account = await getSignetUser(user.id);
   if (!account) {
     account = await upsertSignetUser({
-      clerkId: user.id,
+      authId: user.id,
       email: user.email,
       name: user.name,
     });

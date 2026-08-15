@@ -33,7 +33,7 @@ export async function POST(request: Request) {
 
   if (isSupabaseConfigured()) {
     await upsertSignetUser({
-      clerkId: userId,
+      authId: userId,
       email,
       name: user.name,
     });
@@ -54,7 +54,6 @@ export async function POST(request: Request) {
     return_url: `${origin}/billing/success?plan=${body.plan}`,
     metadata: {
       auth_id: userId,
-      clerk_id: userId,
       plan: body.plan,
     },
   });

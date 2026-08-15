@@ -62,7 +62,7 @@ export async function GET(request: Request) {
   if (isSupabaseConfigured()) {
     try {
       await upsertSignetUser({
-        clerkId: user.id,
+        authId: user.id,
         email: user.email,
         name: user.name,
         touchLogin: true,

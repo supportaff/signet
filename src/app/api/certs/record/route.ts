@@ -21,7 +21,7 @@ export async function POST(request: Request) {
 
   try {
     const account = await recordCertificateEvent({
-      clerkId: userId,
+      authId: userId,
       certType: body.certType || "unknown",
       commonName: body.commonName || "certificate",
       fingerprintSha256: body.fingerprintSha256,

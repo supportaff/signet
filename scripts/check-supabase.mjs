@@ -16,7 +16,7 @@ const supabase = createClient(env.NEXT_PUBLIC_SUPABASE_URL, key, {
   auth: { persistSession: false },
 });
 
-const { error } = await supabase.from("signet_users").select("clerk_id").limit(1);
+const { error } = await supabase.from("signet_users").select("auth_id").limit(1);
 if (error) {
   console.log("TABLE_STATUS", error.code, error.message);
 } else {

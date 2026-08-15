@@ -2,7 +2,7 @@ import { PLAN_LIMITS, type PlanId } from "@/lib/plans";
 import { getSupabaseAdmin, isSupabaseConfigured } from "@/lib/supabase/admin";
 
 export interface SignetAccount {
-  clerk_id: string;
+  auth_id: string;
   email: string | null;
   name: string | null;
   plan: PlanId;
@@ -18,7 +18,7 @@ export interface SignetAccount {
 
 export interface SignetLoginEvent {
   id: string;
-  clerk_id: string;
+  auth_id: string;
   email: string | null;
   created_at: string;
 }
@@ -60,14 +60,14 @@ export function accountQuota(account: Pick<SignetAccount, "plan" | "certs_used">
 export async function getTrackingStatus(): Promise<{ status: TrackingStatus; message?: string }> {
   if (!isSupabaseConfigured()) return { status: "not_configured" };
   const supabase = getSupabaseAdmin();
-  const { error } = await supabase.from("signet_users").select("clerk_id").limit(1);
+  const { error } = await supabase.from("signet_users").select("auth_id").limit(1);
   if (!error) return { status: "ok" };
   if (isMissingTable(error)) return { status: "missing_tables" };
   return { status: "error", message: error.message };
 }
 
 export async function upsertSignetUser(input: {
-  clerkId: string;
+  authId: string;
   email?: string | null;
   name?: string | null;
   touchLogin?: boolean;
@@ -75,10 +75,10 @@ export async function upsertSignetUser(input: {
   if (!isSupabaseConfigured()) return null;
   const supabase = getSupabaseAdmin();
   const now = new Date().toISOString();
-  const existing = await getSignetUser(input.clerkId);
+  const existing = await getSignetUser(input.authId);
   const nextLoginCount = input.touchLogin ? (existing?.login_count ?? 0) + 1 : existing?.login_count ?? 0;
   const payload = {
-    clerk_id: input.clerkId,
+    auth_id: input.authId,
     email: input.email ?? existing?.email ?? null,
     name: input.name ?? existing?.name ?? null,
     updated_at: now,
@@ -92,7 +92,7 @@ export async function upsertSignetUser(input: {
 
   const { data, error } = await supabase
     .from("signet_users")
-    .upsert(payload, { onConflict: "clerk_id" })
+    .upsert(payload, { onConflict: "auth_id" })
     .select()
     .single();
 
@@ -103,12 +103,12 @@ export async function upsertSignetUser(input: {
         .from("signet_users")
         .upsert(
           {
-            clerk_id: input.clerkId,
+            auth_id: input.authId,
             email: input.email ?? existing?.email ?? null,
             name: input.name ?? existing?.name ?? null,
             updated_at: now,
           },
-          { onConflict: "clerk_id" },
+          { onConflict: "auth_id" },
         )
         .select()
         .single();
@@ -123,7 +123,7 @@ export async function upsertSignetUser(input: {
 
   if (input.touchLogin) {
     await supabase.from("signet_login_events").insert({
-      clerk_id: input.clerkId,
+      auth_id: input.authId,
       email: input.email ?? existing?.email ?? null,
     });
   }
@@ -131,14 +131,10 @@ export async function upsertSignetUser(input: {
   return normalizeAccount(data as SignetAccount);
 }
 
-export async function getSignetUser(clerkId: string) {
+export async function getSignetUser(authId: string) {
   if (!isSupabaseConfigured()) return null;
   const supabase = getSupabaseAdmin();
-  const { data, error } = await supabase
-    .from("signet_users")
-    .select("*")
-    .eq("clerk_id", clerkId)
-    .maybeSingle();
+  const { data, error } = await supabase.from("signet_users").select("*").eq("auth_id", authId).maybeSingle();
   if (error) {
     if (isMissingTable(error)) return null;
     throw error;
@@ -184,7 +180,7 @@ export async function listRecentLogins(limit = 20) {
 }
 
 export async function setUserPlan(input: {
-  clerkId: string;
+  authId: string;
   plan: PlanId;
   planStatus?: string;
   dodoCustomerId?: string | null;
@@ -201,7 +197,7 @@ export async function setUserPlan(input: {
       dodo_subscription_id: input.dodoSubscriptionId,
       updated_at: new Date().toISOString(),
     })
-    .eq("clerk_id", input.clerkId)
+    .eq("auth_id", input.authId)
     .select()
     .maybeSingle();
   if (error) {
@@ -212,18 +208,18 @@ export async function setUserPlan(input: {
 }
 
 export async function recordCertificateEvent(input: {
-  clerkId: string;
+  authId: string;
   certType: string;
   commonName: string;
   fingerprintSha256?: string;
 }) {
   if (!isSupabaseConfigured()) return null;
   const supabase = getSupabaseAdmin();
-  const existing = await getSignetUser(input.clerkId);
+  const existing = await getSignetUser(input.authId);
   if (!existing) {
-    await upsertSignetUser({ clerkId: input.clerkId });
+    await upsertSignetUser({ authId: input.authId });
   }
-  const current = existing ?? (await getSignetUser(input.clerkId));
+  const current = existing ?? (await getSignetUser(input.authId));
   const quota = accountQuota({
     plan: current?.plan ?? "free",
     certs_used: current?.certs_used ?? 0,
@@ -233,7 +229,7 @@ export async function recordCertificateEvent(input: {
   }
 
   const { error: eventError } = await supabase.from("signet_certificate_events").insert({
-    clerk_id: input.clerkId,
+    auth_id: input.authId,
     cert_type: input.certType,
     common_name: input.commonName,
     fingerprint_sha256: input.fingerprintSha256 || null,
@@ -246,7 +242,7 @@ export async function recordCertificateEvent(input: {
       certs_used: (current?.certs_used ?? 0) + 1,
       updated_at: new Date().toISOString(),
     })
-    .eq("clerk_id", input.clerkId)
+    .eq("auth_id", input.authId)
     .select()
     .single();
   if (error) throw error;
@@ -254,7 +250,7 @@ export async function recordCertificateEvent(input: {
 }
 
 export async function logPaymentEvent(input: {
-  clerkId?: string | null;
+  authId?: string | null;
   dodoPaymentId?: string | null;
   dodoSubscriptionId?: string | null;
   plan?: string | null;
@@ -264,7 +260,7 @@ export async function logPaymentEvent(input: {
   if (!isSupabaseConfigured()) return;
   const supabase = getSupabaseAdmin();
   await supabase.from("signet_payments").insert({
-    clerk_id: input.clerkId ?? null,
+    auth_id: input.authId ?? null,
     dodo_payment_id: input.dodoPaymentId ?? null,
     dodo_subscription_id: input.dodoSubscriptionId ?? null,
     plan: input.plan ?? null,
@@ -273,9 +269,9 @@ export async function logPaymentEvent(input: {
   });
 }
 
-export async function deleteSignetUser(clerkId: string) {
+export async function deleteSignetUser(authId: string) {
   if (!isSupabaseConfigured()) return;
   const supabase = getSupabaseAdmin();
-  const { error } = await supabase.from("signet_users").delete().eq("clerk_id", clerkId);
+  const { error } = await supabase.from("signet_users").delete().eq("auth_id", authId);
   if (error && !isMissingTable(error)) throw error;
 }

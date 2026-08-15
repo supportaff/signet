@@ -13,7 +13,7 @@ export async function POST() {
   }
 
   const account = await upsertSignetUser({
-    clerkId: user.id,
+    authId: user.id,
     email: user.email,
     name: user.name,
   });

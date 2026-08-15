@@ -16,8 +16,8 @@ type DodoPayload = {
   };
 };
 
-function clerkIdFrom(payload: DodoPayload) {
-  return payload.data?.metadata?.auth_id || payload.data?.metadata?.clerk_id || null;
+function authIdFrom(payload: DodoPayload) {
+  return payload.data?.metadata?.auth_id || null;
 }
 
 function planFrom(payload: DodoPayload): PlanId | null {
@@ -27,15 +27,15 @@ function planFrom(payload: DodoPayload): PlanId | null {
 }
 
 async function applyPlan(payload: DodoPayload, planStatus: string) {
-  const clerkId = clerkIdFrom(payload);
+  const authId = authIdFrom(payload);
   const plan = planFrom(payload);
-  if (!clerkId || !plan) return;
+  if (!authId || !plan) return;
   await upsertSignetUser({
-    clerkId,
+    authId,
     email: payload.data?.customer?.email,
   });
   await setUserPlan({
-    clerkId,
+    authId,
     plan,
     planStatus,
     dodoCustomerId: payload.data?.customer?.customer_id || payload.data?.customer_id,
@@ -51,7 +51,7 @@ export const POST = webhookKey
       onPayload: async (payload) => {
     const body = payload as DodoPayload;
     await logPaymentEvent({
-      clerkId: clerkIdFrom(body),
+      authId: authIdFrom(body),
       dodoPaymentId: body.data?.payment_id,
       dodoSubscriptionId: body.data?.subscription_id,
       plan: planFrom(body),
@@ -66,20 +66,20 @@ export const POST = webhookKey
     await applyPlan(payload as DodoPayload, "active");
   },
   onSubscriptionCancelled: async (payload) => {
-    const clerkId = clerkIdFrom(payload as DodoPayload);
-    if (!clerkId) return;
-    await setUserPlan({ clerkId, plan: "free", planStatus: "canceled" });
+    const authId = authIdFrom(payload as DodoPayload);
+    if (!authId) return;
+    await setUserPlan({ authId, plan: "free", planStatus: "canceled" });
   },
   onSubscriptionExpired: async (payload) => {
-    const clerkId = clerkIdFrom(payload as DodoPayload);
-    if (!clerkId) return;
-    await setUserPlan({ clerkId, plan: "free", planStatus: "expired" });
+    const authId = authIdFrom(payload as DodoPayload);
+    if (!authId) return;
+    await setUserPlan({ authId, plan: "free", planStatus: "expired" });
   },
   onSubscriptionOnHold: async (payload) => {
-    const clerkId = clerkIdFrom(payload as DodoPayload);
-    if (!clerkId) return;
+    const authId = authIdFrom(payload as DodoPayload);
+    if (!authId) return;
     await setUserPlan({
-      clerkId,
+      authId,
       plan: planFrom(payload as DodoPayload) ?? "plus",
       planStatus: "past_due",
     });
