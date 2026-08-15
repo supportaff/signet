@@ -11,7 +11,8 @@ const env = Object.fromEntries(
     }),
 );
 
-const supabase = createClient(env.NEXT_PUBLIC_SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY, {
+const key = env.SUPABASE_SECRET_KEY || env.SUPABASE_SERVICE_ROLE_KEY;
+const supabase = createClient(env.NEXT_PUBLIC_SUPABASE_URL, key, {
   auth: { persistSession: false },
 });
 

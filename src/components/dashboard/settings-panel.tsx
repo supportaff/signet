@@ -92,9 +92,9 @@ export function SettingsPanel() {
         <div className="rounded-[28px] border border-gold/30 bg-gold/10 p-6 text-sm">
           <p className="font-medium">Supabase tables are not created yet.</p>
           <p className="mt-2 text-muted">
-            Open the SQL editor in project <span className="font-mono">yrolqptdvlhmcfipcklp</span> and
-            run <span className="font-mono">supabase/schema.sql</span>. After that, sign in once more
-            to record this login.
+            Signet needs its own Supabase project. Create one named Signet, add the URL and
+            service role key, then run <span className="font-mono">supabase/schema.sql</span>. After
+            that, sign in once more to record this login.
           </p>
         </div>
       ) : null}
