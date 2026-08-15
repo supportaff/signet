@@ -23,6 +23,26 @@ export interface SignetLoginEvent {
   created_at: string;
 }
 
+export interface SignetPaymentEvent {
+  id: string;
+  auth_id: string | null;
+  dodo_payment_id: string | null;
+  dodo_subscription_id: string | null;
+  plan: string | null;
+  event_type: string;
+  status: string | null;
+  created_at: string;
+}
+
+export interface SignetCertEvent {
+  id: string;
+  auth_id: string;
+  cert_type: string;
+  common_name: string | null;
+  fingerprint_sha256: string | null;
+  created_at: string;
+}
+
 export type TrackingStatus = "ok" | "not_configured" | "missing_tables" | "error";
 
 function isMissingTable(error: { code?: string; message?: string } | null) {
@@ -186,6 +206,36 @@ export async function listSignetUsers() {
     return ((fallback ?? []) as SignetAccount[]).map(normalizeAccount);
   }
   return ((data ?? []) as SignetAccount[]).map(normalizeAccount);
+}
+
+export async function listPayments(limit = 100) {
+  if (!isSupabaseConfigured()) return [];
+  const supabase = getSupabaseAdmin();
+  const { data, error } = await supabase
+    .from("signet_payments")
+    .select("*")
+    .order("created_at", { ascending: false })
+    .limit(limit);
+  if (error) {
+    if (isMissingTable(error)) return [];
+    return [];
+  }
+  return (data ?? []) as SignetPaymentEvent[];
+}
+
+export async function listCertificateEvents(limit = 50) {
+  if (!isSupabaseConfigured()) return [];
+  const supabase = getSupabaseAdmin();
+  const { data, error } = await supabase
+    .from("signet_certificate_events")
+    .select("*")
+    .order("created_at", { ascending: false })
+    .limit(limit);
+  if (error) {
+    if (isMissingTable(error)) return [];
+    return [];
+  }
+  return (data ?? []) as SignetCertEvent[];
 }
 
 export async function listRecentLogins(limit = 20) {

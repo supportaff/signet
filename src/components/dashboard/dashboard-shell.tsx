@@ -21,7 +21,7 @@ export function DashboardShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const nav = isAdmin
-    ? [...links.slice(0, 2), { href: "/dashboard/users", label: "Users", icon: Users }, links[2]]
+    ? [...links.slice(0, 2), { href: "/dashboard/users", label: "Admin", icon: Users }, links[2]]
     : links;
 
   useEffect(() => {
