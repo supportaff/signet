@@ -21,8 +21,19 @@ export function GeneratorApp() {
   const [preferredType, setPreferredType] = useState<CertType | undefined>();
 
   const onGenerate = async (values: CertFormValues) => {
+    const signedIn = Boolean(user && user.id !== "guest");
     try {
-      assertCanGenerate(user);
+      if (signedIn) {
+        const me = await fetch("/api/me");
+        const data = (await me.json()) as { configured?: boolean; quota?: { allowed?: boolean; limit?: number } };
+        if (data.configured && data.quota && !data.quota.allowed) {
+          toast.error("You've used this plan's certificate limit. Upgrade to continue.");
+          window.dispatchEvent(new Event("signet-auth"));
+          return;
+        }
+      } else {
+        assertCanGenerate(user);
+      }
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Limit reached.");
       return;
@@ -37,10 +48,8 @@ export function GeneratorApp() {
     try {
       const next = await generateCertificateBundle(values);
       setPhase("Signing the certificate…");
-      incrementUsage(user);
-      recordGeneration(next);
-      if (user && user.id !== "guest") {
-        await fetch("/api/certs/record", {
+      if (signedIn) {
+        const recorded = await fetch("/api/certs/record", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -49,7 +58,14 @@ export function GeneratorApp() {
             fingerprintSha256: next.fingerprintSha256,
           }),
         });
+        if (recorded.status === 402) {
+          toast.error("You've used this plan's certificate limit. Upgrade to continue.");
+          window.dispatchEvent(new Event("signet-auth"));
+          return;
+        }
       }
+      incrementUsage(user);
+      recordGeneration(next);
       if (next.type === "root-ca" && next.certificatePem && next.privateKeyPem) {
         const ca = {
           name: next.commonName,
