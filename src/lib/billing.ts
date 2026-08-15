@@ -14,15 +14,6 @@ export function dodoEnvironment(): DodoEnvironment {
   return process.env.DODO_PAYMENTS_ENVIRONMENT === "test_mode" ? "test_mode" : "live_mode";
 }
 
-export function otherDodoEnvironment(current: DodoEnvironment): DodoEnvironment {
-  return current === "live_mode" ? "test_mode" : "live_mode";
-}
-
-export function isUnauthorizedDodoError(error: unknown) {
-  const message = error instanceof Error ? error.message : String(error);
-  return /401|unauthorized|invalid api key|invalid token/i.test(message);
-}
-
 export function productIdForPlan(plan: Exclude<PlanId, "free">) {
   const id = plan === "studio" ? process.env.DODO_PRODUCT_STUDIO : process.env.DODO_PRODUCT_PLUS;
   if (!id) {

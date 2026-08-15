@@ -102,7 +102,7 @@ export function SettingsPanel() {
       <section className="grid gap-3 sm:grid-cols-3">
         <StatusCard
           label="Sign-in"
-          value={user?.id === "guest" ? "Guest" : "Google"}
+          value={user?.id === "guest" ? "Signed out" : "Google"}
           hint={user?.email || "No email on this session"}
         />
         <StatusCard

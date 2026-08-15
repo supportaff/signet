@@ -1,12 +1,6 @@
 import { NextResponse } from "next/server";
 import DodoPayments from "dodopayments";
-import {
-  dodoEnvironment,
-  isDodoConfigured,
-  isUnauthorizedDodoError,
-  otherDodoEnvironment,
-  productIdForPlan,
-} from "@/lib/billing";
+import { dodoEnvironment, isDodoConfigured, productIdForPlan } from "@/lib/billing";
 import { upsertSignetUser } from "@/lib/users";
 import { isSupabaseConfigured } from "@/lib/supabase/admin";
 import { getSessionUser } from "@/lib/session";
@@ -60,28 +54,14 @@ export async function POST(request: Request) {
     },
   };
 
-  const createSession = async (environment: ReturnType<typeof dodoEnvironment>) => {
+  try {
     const client = new DodoPayments({
       bearerToken: process.env.DODO_PAYMENTS_API_KEY,
-      environment,
+      environment: dodoEnvironment(),
     });
-    return client.checkoutSessions.create(payload);
-  };
-
-  try {
-    const session = await createSession(dodoEnvironment());
+    const session = await client.checkoutSessions.create(payload);
     return NextResponse.json({ checkout_url: session.checkout_url });
   } catch (error) {
-    if (isUnauthorizedDodoError(error)) {
-      try {
-        const session = await createSession(otherDodoEnvironment(dodoEnvironment()));
-        return NextResponse.json({ checkout_url: session.checkout_url });
-      } catch (retryError) {
-        const message = retryError instanceof Error ? retryError.message : "Could not start checkout.";
-        console.error("Dodo checkout failed on both environments", message);
-        return NextResponse.json({ error: message }, { status: 502 });
-      }
-    }
     const message = error instanceof Error ? error.message : "Could not start checkout.";
     console.error("Dodo checkout failed", message);
     return NextResponse.json({ error: message }, { status: 502 });

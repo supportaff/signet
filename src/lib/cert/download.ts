@@ -93,5 +93,5 @@ export async function downloadZip(bundle: GeneratedCertificate, pfxPassword?: st
     zip.file(`${name}.pfx`, bytes);
   }
   const blob = await zip.generateAsync({ type: "blob" });
-  downloadBlob(`${name}-signet.zip`, blob, "application/zip");
+  downloadBlob(`${name}-selfsignedcert.zip`, blob, "application/zip");
 }
