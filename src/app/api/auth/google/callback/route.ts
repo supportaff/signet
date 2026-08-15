@@ -65,6 +65,7 @@ export async function GET(request: Request) {
         clerkId: user.id,
         email: user.email,
         name: user.name,
+        touchLogin: true,
       });
     } catch (error) {
       console.error("Supabase user sync failed after Google sign-in", error);

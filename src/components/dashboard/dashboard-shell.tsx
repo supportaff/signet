@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { ReactNode, useEffect } from "react";
-import { LayoutDashboard, LogOut, Plus, Settings } from "lucide-react";
+import { LayoutDashboard, LogOut, Plus, Settings, Users } from "lucide-react";
+import { useAccount } from "@/hooks/use-account";
 import { useAuth } from "@/hooks/use-auth";
 import { clearSession, isGuest } from "@/lib/auth";
 import { cn } from "@/lib/utils";
@@ -16,8 +17,12 @@ const links = [
 
 export function DashboardShell({ children }: { children: ReactNode }) {
   const { user, ready } = useAuth();
+  const { isAdmin } = useAccount();
   const pathname = usePathname();
   const router = useRouter();
+  const nav = isAdmin
+    ? [...links.slice(0, 2), { href: "/dashboard/users", label: "Users", icon: Users }, links[2]]
+    : links;
 
   useEffect(() => {
     if (ready && !user) {
@@ -41,7 +46,7 @@ export function DashboardShell({ children }: { children: ReactNode }) {
           <p className="truncate text-xs text-muted">{isGuest(user) ? "Guest session" : user.email}</p>
         </div>
         <nav className="space-y-1">
-          {links.map((link) => (
+          {nav.map((link) => (
             <Link
               key={link.href}
               href={link.href}

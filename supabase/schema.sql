@@ -1,5 +1,5 @@
 -- Signet user tracking. Run this in the Supabase SQL editor.
--- Stores account + plan + metadata only. Never store private keys.
+-- Stores account + plan + login metadata only. Never store private keys.
 
 create table if not exists public.signet_users (
   clerk_id text primary key,
@@ -8,11 +8,16 @@ create table if not exists public.signet_users (
   plan text not null default 'free' check (plan in ('free', 'plus', 'studio')),
   plan_status text not null default 'active',
   certs_used integer not null default 0,
+  login_count integer not null default 0,
+  last_login_at timestamptz,
   dodo_customer_id text,
   dodo_subscription_id text,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
+
+alter table public.signet_users add column if not exists login_count integer not null default 0;
+alter table public.signet_users add column if not exists last_login_at timestamptz;
 
 create table if not exists public.signet_certificate_events (
   id uuid primary key default gen_random_uuid(),
@@ -34,12 +39,26 @@ create table if not exists public.signet_payments (
   created_at timestamptz not null default now()
 );
 
+create table if not exists public.signet_login_events (
+  id uuid primary key default gen_random_uuid(),
+  clerk_id text not null references public.signet_users (clerk_id) on delete cascade,
+  email text,
+  created_at timestamptz not null default now()
+);
+
 create index if not exists signet_certificate_events_clerk_idx
   on public.signet_certificate_events (clerk_id, created_at desc);
 
 create index if not exists signet_payments_clerk_idx
   on public.signet_payments (clerk_id, created_at desc);
 
+create index if not exists signet_login_events_clerk_idx
+  on public.signet_login_events (clerk_id, created_at desc);
+
+create index if not exists signet_users_last_login_idx
+  on public.signet_users (last_login_at desc nulls last);
+
 alter table public.signet_users enable row level security;
 alter table public.signet_certificate_events enable row level security;
 alter table public.signet_payments enable row level security;
+alter table public.signet_login_events enable row level security;

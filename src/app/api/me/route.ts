@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
-import { accountQuota, getSignetUser, upsertSignetUser } from "@/lib/users";
+import { accountQuota, getSignetUser, getTrackingStatus, upsertSignetUser } from "@/lib/users";
 import { isSupabaseConfigured } from "@/lib/supabase/admin";
 import { getSessionUser } from "@/lib/session";
+import { isAdminConfigured, isAdminEmail } from "@/lib/admin";
 
 export async function GET() {
   const user = await getSessionUser();
@@ -9,8 +10,17 @@ export async function GET() {
     return NextResponse.json({ error: "Sign in required." }, { status: 401 });
   }
 
-  if (!isSupabaseConfigured()) {
-    return NextResponse.json({ configured: false, userId: user.id, user });
+  const tracking = await getTrackingStatus();
+  if (!isSupabaseConfigured() || tracking.status !== "ok") {
+    return NextResponse.json({
+      configured: false,
+      tracking: tracking.status,
+      trackingMessage: tracking.message,
+      userId: user.id,
+      user,
+      isAdmin: isAdminEmail(user.email),
+      adminConfigured: isAdminConfigured(),
+    });
   }
 
   let account = await getSignetUser(user.id);
@@ -28,8 +38,27 @@ export async function GET() {
 
   return NextResponse.json({
     configured: true,
+    tracking: "ok",
     account,
     quota: accountQuota(account),
     user,
+    isAdmin: isAdminEmail(user.email),
+    adminConfigured: isAdminConfigured(),
   });
+}
+
+export async function DELETE(request: Request) {
+  const user = await getSessionUser();
+  if (!user) {
+    return NextResponse.json({ error: "Sign in required." }, { status: 401 });
+  }
+
+  const body = (await request.json().catch(() => null)) as { confirm?: string } | null;
+  if ((body?.confirm || "").trim().toLowerCase() !== user.email.trim().toLowerCase()) {
+    return NextResponse.json({ error: "Type your email to confirm deletion." }, { status: 400 });
+  }
+
+  const { deleteSignetUser } = await import("@/lib/users");
+  await deleteSignetUser(user.id);
+  return NextResponse.json({ ok: true });
 }
