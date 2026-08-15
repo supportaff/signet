@@ -6,6 +6,7 @@ import { ReactNode, useEffect } from "react";
 import { LayoutDashboard, LogOut, Plus, Settings, Users } from "lucide-react";
 import { useAccount } from "@/hooks/use-account";
 import { useAuth } from "@/hooks/use-auth";
+import { ADMIN_PATH } from "@/lib/admin-path";
 import { clearSession, isGuest } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 
@@ -21,7 +22,7 @@ export function DashboardShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const nav = isAdmin
-    ? [...links.slice(0, 2), { href: "/dashboard/users", label: "Admin", icon: Users }, links[2]]
+    ? [...links.slice(0, 2), { href: ADMIN_PATH, label: "Admin", icon: Users }, links[2]]
     : links;
 
   useEffect(() => {

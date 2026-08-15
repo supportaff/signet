@@ -1,10 +1,12 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { DashboardShell } from "@/components/dashboard/dashboard-shell";
 import { useAccount } from "@/hooks/use-account";
 import { planLabel } from "@/lib/plans";
 import type {
@@ -14,7 +16,7 @@ import type {
   SignetPaymentEvent,
   TrackingStatus,
 } from "@/lib/users";
-import { formatDate } from "@/lib/utils";
+import { cn, formatDate } from "@/lib/utils";
 
 function statusTone(status?: string) {
   if (status === "active" || status === "succeeded") return "sage" as const;
@@ -108,28 +110,41 @@ export function UsersPanel() {
   };
 
   if (!ready) {
-    return <div className="h-40 rounded-[28px] border border-line skeleton" />;
+    return (
+      <div className="mx-auto max-w-6xl px-5 py-16">
+        <div className="h-40 rounded-[28px] border border-line skeleton" />
+      </div>
+    );
   }
 
   if (!isAdmin) {
     return (
-      <div className="rounded-[28px] border border-line bg-surface p-8">
-        <p className="eyebrow">Admin</p>
-        <h1 className="mt-2 font-serif text-4xl tracking-tight">Restricted.</h1>
-        <p className="mt-3 max-w-xl text-sm text-muted">
-          Only prakashmurthy5199@gmail.com can open this dashboard.
+      <div className="mx-auto max-w-xl px-5 py-24 text-center">
+        <p className="eyebrow">404</p>
+        <h1 className="display mt-3 text-5xl">This page was never issued.</h1>
+        <p className="mt-4 text-ink-soft">
+          No certificate, and no route, lives here. Try the generator or go home.
         </p>
+        <div className="mt-8 flex justify-center gap-3">
+          <Link href="/" className={cn(buttonVariants({ variant: "outline" }))}>
+            Home
+          </Link>
+          <Link href="/generate" className={cn(buttonVariants({ variant: "wax" }))}>
+            Generate
+          </Link>
+        </div>
       </div>
     );
   }
 
   return (
+    <DashboardShell>
     <div className="space-y-6">
       <div>
         <p className="eyebrow">Admin</p>
         <h1 className="mt-2 font-serif text-4xl tracking-tight">Users, plans, transactions.</h1>
         <p className="mt-2 max-w-xl text-sm text-muted">
-          Visible only to prakashmurthy5199@gmail.com. Metadata only — no private keys.
+          Account metadata only — certificates and private keys are never stored.
         </p>
       </div>
 
@@ -304,6 +319,7 @@ export function UsersPanel() {
         </section>
       </section>
     </div>
+    </DashboardShell>
   );
 }
 
