@@ -39,24 +39,30 @@ export async function POST(request: Request) {
     });
   }
 
-  const origin = new URL(request.url).origin;
+  const returnUrl =
+    process.env.DODO_PAYMENTS_RETURN_URL || "https://www.selfsignedcert.com/billing/success";
   const client = new DodoPayments({
     bearerToken: process.env.DODO_PAYMENTS_API_KEY,
     environment: dodoEnvironment(),
   });
 
-  const session = await client.checkoutSessions.create({
-    product_cart: [{ product_id: productIdForPlan(body.plan), quantity: 1 }],
-    customer: {
-      email,
-      name: user.name || email,
-    },
-    return_url: `${origin}/billing/success?plan=${body.plan}`,
-    metadata: {
-      auth_id: userId,
-      plan: body.plan,
-    },
-  });
-
-  return NextResponse.json({ checkout_url: session.checkout_url });
+  try {
+    const session = await client.checkoutSessions.create({
+      product_cart: [{ product_id: productIdForPlan(body.plan), quantity: 1 }],
+      customer: {
+        email,
+        name: user.name || email,
+      },
+      return_url: `${returnUrl}${returnUrl.includes("?") ? "&" : "?"}plan=${body.plan}`,
+      metadata: {
+        auth_id: userId,
+        plan: body.plan,
+      },
+    });
+    return NextResponse.json({ checkout_url: session.checkout_url });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Could not start checkout.";
+    console.error("Dodo checkout failed", message);
+    return NextResponse.json({ error: message }, { status: 502 });
+  }
 }
