@@ -1,25 +1,24 @@
-import { auth, currentUser } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { accountQuota, getSignetUser, upsertSignetUser } from "@/lib/users";
 import { isSupabaseConfigured } from "@/lib/supabase/admin";
+import { getSessionUser } from "@/lib/session";
 
 export async function GET() {
-  const { userId } = await auth();
-  if (!userId) {
+  const user = await getSessionUser();
+  if (!user) {
     return NextResponse.json({ error: "Sign in required." }, { status: 401 });
   }
 
   if (!isSupabaseConfigured()) {
-    return NextResponse.json({ configured: false, userId });
+    return NextResponse.json({ configured: false, userId: user.id, user });
   }
 
-  const clerkUser = await currentUser();
-  let account = await getSignetUser(userId);
+  let account = await getSignetUser(user.id);
   if (!account) {
     account = await upsertSignetUser({
-      clerkId: userId,
-      email: clerkUser?.primaryEmailAddress?.emailAddress,
-      name: clerkUser?.fullName || clerkUser?.firstName,
+      clerkId: user.id,
+      email: user.email,
+      name: user.name,
     });
   }
 
@@ -31,5 +30,6 @@ export async function GET() {
     configured: true,
     account,
     quota: accountQuota(account),
+    user,
   });
 }

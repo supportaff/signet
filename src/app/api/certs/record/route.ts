@@ -1,10 +1,11 @@
-import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { accountQuota, recordCertificateEvent } from "@/lib/users";
 import { isSupabaseConfigured } from "@/lib/supabase/admin";
+import { getSessionUser } from "@/lib/session";
 
 export async function POST(request: Request) {
-  const { userId } = await auth();
+  const user = await getSessionUser();
+  const userId = user?.id;
   if (!userId) {
     return NextResponse.json({ error: "Sign in required." }, { status: 401 });
   }

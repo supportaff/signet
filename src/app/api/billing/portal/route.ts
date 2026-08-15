@@ -1,11 +1,12 @@
-import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 import { CustomerPortal } from "@dodopayments/nextjs";
 import { dodoEnvironment, isDodoConfigured } from "@/lib/billing";
 import { getSignetUser } from "@/lib/users";
+import { getSessionUser } from "@/lib/session";
 
 export async function GET(request: NextRequest) {
-  const { userId } = await auth();
+  const user = await getSessionUser();
+  const userId = user?.id;
   if (!userId) {
     return NextResponse.json({ error: "Sign in required." }, { status: 401 });
   }

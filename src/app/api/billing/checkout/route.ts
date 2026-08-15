@@ -1,15 +1,16 @@
-import { auth, currentUser } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import DodoPayments from "dodopayments";
 import { dodoEnvironment, isDodoConfigured, productIdForPlan } from "@/lib/billing";
 import { upsertSignetUser } from "@/lib/users";
 import { isSupabaseConfigured } from "@/lib/supabase/admin";
+import { getSessionUser } from "@/lib/session";
 
 export async function POST(request: Request) {
-  const { userId } = await auth();
-  if (!userId) {
+  const user = await getSessionUser();
+  if (!user) {
     return NextResponse.json({ error: "Sign in to upgrade." }, { status: 401 });
   }
+  const userId = user.id;
   if (!isDodoConfigured()) {
     return NextResponse.json(
       {
@@ -25,8 +26,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Choose Plus or Studio." }, { status: 400 });
   }
 
-  const user = await currentUser();
-  const email = user?.primaryEmailAddress?.emailAddress;
+  const email = user.email;
   if (!email) {
     return NextResponse.json({ error: "Your Google account needs an email." }, { status: 400 });
   }
@@ -35,7 +35,7 @@ export async function POST(request: Request) {
     await upsertSignetUser({
       clerkId: userId,
       email,
-      name: user.fullName || user.firstName,
+      name: user.name,
     });
   }
 
@@ -49,10 +49,11 @@ export async function POST(request: Request) {
     product_cart: [{ product_id: productIdForPlan(body.plan), quantity: 1 }],
     customer: {
       email,
-      name: user.fullName || user.firstName || email,
+      name: user.name || email,
     },
     return_url: `${origin}/billing/success?plan=${body.plan}`,
     metadata: {
+      auth_id: userId,
       clerk_id: userId,
       plan: body.plan,
     },

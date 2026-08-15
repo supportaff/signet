@@ -2,15 +2,25 @@
 
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { SignInButton, SignUpButton } from "@clerk/nextjs";
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { continueAsGuest } from "@/lib/auth";
+import { cn } from "@/lib/utils";
+
+const ERRORS: Record<string, string> = {
+  google_not_configured:
+    "Google sign-in is not configured yet. Add NEXT_PUBLIC_GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, and AUTH_SECRET.",
+  google_denied: "Google sign-in was cancelled.",
+  google_state: "That Google sign-in expired. Try again.",
+  google_failed: "Google could not complete sign-in. Check the OAuth client redirect URI.",
+};
 
 export function AuthCard({ mode }: { mode: "login" | "signup" }) {
   const router = useRouter();
   const params = useSearchParams();
   const next = params.get("next") || "/dashboard";
+  const error = params.get("error");
+  const href = `/api/auth/google?next=${encodeURIComponent(next)}`;
 
   return (
     <div className="w-full max-w-md rounded-[28px] border border-line bg-surface p-7 shadow-lift">
@@ -19,28 +29,15 @@ export function AuthCard({ mode }: { mode: "login" | "signup" }) {
         {mode === "login" ? "Sign in to Signet" : "Join Signet"}
       </h1>
       <p className="mt-2 text-sm text-muted">
-        Sign in with Google via Clerk. Certificates and private keys still never leave this browser.
+        Sign in with your Google account. Certificates and private keys still never leave this browser.
       </p>
 
-      {mode === "signup" ? (
-        <SignUpButton mode="modal" forceRedirectUrl={next} oauthFlow="auto">
-          <Button variant="wax" className="mt-6 w-full">
-            <GoogleMark />
-            Continue with Google
-          </Button>
-        </SignUpButton>
-      ) : (
-        <SignInButton mode="modal" forceRedirectUrl={next} oauthFlow="auto">
-          <Button variant="wax" className="mt-6 w-full">
-            <GoogleMark />
-            Continue with Google
-          </Button>
-        </SignInButton>
-      )}
+      {error && ERRORS[error] ? <p className="mt-4 text-sm text-danger">{ERRORS[error]}</p> : null}
 
-      <p className="mt-3 text-xs text-muted">
-        If Google is not listed, enable it in Clerk: Configure → SSO connections → Google.
-      </p>
+      <Link href={href} className={cn(buttonVariants({ variant: "wax" }), "mt-6 w-full")}>
+        <GoogleMark />
+        Continue with Google
+      </Link>
 
       <div className="mt-6 flex flex-col gap-2 border-t border-line pt-5 text-sm text-ink-soft">
         <button

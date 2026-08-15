@@ -17,7 +17,7 @@ type DodoPayload = {
 };
 
 function clerkIdFrom(payload: DodoPayload) {
-  return payload.data?.metadata?.clerk_id || null;
+  return payload.data?.metadata?.auth_id || payload.data?.metadata?.clerk_id || null;
 }
 
 function planFrom(payload: DodoPayload): PlanId | null {

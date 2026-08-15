@@ -4,7 +4,7 @@ import { AuthCard } from "@/components/auth/auth-card";
 
 export const metadata: Metadata = {
   title: "Create account",
-  description: "Create a local Signet demo account. We still never store certificates or private keys.",
+  description: "Create a Signet account with Google. We still never store certificates or private keys.",
 };
 
 export default function SignupPage() {
