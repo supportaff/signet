@@ -29,7 +29,7 @@ const rows: { label: string; values: (string | boolean)[] }[] = [
   { label: "RSA 2048", values: [true, true, true] },
   { label: "RSA 4096", values: [true, true, true] },
   { label: ".crt / .key / .pem / .pfx / zip", values: [true, true, true] },
-  { label: "Guest mode", values: [true, true, true] },
+  { label: "Google sign-in required", values: [true, true, true] },
   { label: "Saved subject profiles", values: [false, true, true] },
   { label: "Priority support", values: [false, false, true] },
   { label: "Private keys stored by SelfSignedCert", values: ["Never", "Never", "Never"] },

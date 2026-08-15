@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Logo } from "@/components/brand/logo";
+import { site } from "@/lib/site";
 
 const columns = [
   {
@@ -29,6 +30,7 @@ const columns = [
       { href: "/guides/generate-csr-online", label: "Generate a CSR" },
       { href: "/guides/local-certificate-authority", label: "Local CA" },
       { href: "/about", label: "About" },
+      { href: "/contact", label: "Contact" },
       { href: "/privacy", label: "Privacy" },
       { href: "/terms", label: "Terms" },
     ],
@@ -44,6 +46,12 @@ export function SiteFooter() {
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted">
             A private notary for TLS. Certificates and keys are created in this
             browser tab. SelfSignedCert has nothing to leak because it never holds them.
+          </p>
+          <p className="mt-4 text-sm text-ink-soft">
+            Contact{" "}
+            <a className="text-wax hover:underline" href={`mailto:${site.supportEmail}`}>
+              {site.supportEmail}
+            </a>
           </p>
         </div>
         {columns.map((column) => (

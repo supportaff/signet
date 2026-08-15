@@ -42,7 +42,7 @@ export default function TermsPage() {
       <h2>Accounts and plans</h2>
       <p>
         Google sign-in identifies your account. Free, Plus, and Studio limits
-        apply to signed-in usage. Guest generation is limited on this device.
+        apply to signed-in usage. Generating a certificate requires sign-in.
         We may refuse or rate-limit abuse of the live SSL checker.
       </p>
       <h2>Limitation</h2>

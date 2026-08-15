@@ -9,3 +9,4 @@ SSL checker: https://selfsignedcert.com/tools/check-ssl
 Guides: https://selfsignedcert.com/guides
 Privacy: https://selfsignedcert.com/privacy
 Terms: https://selfsignedcert.com/terms
+Contact: selfsignedcert@klickleads.com

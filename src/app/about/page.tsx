@@ -39,6 +39,12 @@ export default function AboutPage() {
         create a self-signed certificate without sending the private key
         anywhere. No metaphor required.
       </p>
+      <h2>Contact</h2>
+      <p>
+        Questions, press, or product notes:{" "}
+        <a href={`mailto:${site.supportEmail}`}>{site.supportEmail}</a>. Do not
+        send a private key.
+      </p>
     </article>
   );
 }
