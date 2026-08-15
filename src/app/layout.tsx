@@ -27,18 +27,18 @@ const newsreader = Newsreader({
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: "Signet — Free Self-Signed SSL, CSR & mTLS Certificate Generator",
+    default: "SelfSignedCert — Free Self-Signed SSL Certificate Generator",
     template: `%s · ${site.name}`,
   },
   description: site.description,
   keywords: seoKeywords,
-  authors: [{ name: "Signet" }],
-  creator: "Signet",
+  authors: [{ name: "SelfSignedCert" }],
+  creator: "SelfSignedCert",
   category: "security",
   robots: { index: true, follow: true },
   alternates: { canonical: site.url },
   openGraph: {
-    title: "Signet — Free Self-Signed SSL, CSR & mTLS Certificate Generator",
+    title: "SelfSignedCert — Free Self-Signed SSL Certificate Generator",
     description: site.description,
     url: site.url,
     siteName: site.name,
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Signet — Free Self-Signed SSL, CSR & mTLS Certificate Generator",
+    title: "SelfSignedCert — Free Self-Signed SSL Certificate Generator",
     description: site.description,
   },
 };

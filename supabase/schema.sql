@@ -1,4 +1,4 @@
--- Signet user tracking. Run this in the Signet Supabase SQL editor.
+-- SelfSignedCert user tracking. Run this in the SelfSignedCert Supabase SQL editor.
 -- Stores account + plan + login metadata only. Never store private keys.
 
 create table if not exists public.signet_users (

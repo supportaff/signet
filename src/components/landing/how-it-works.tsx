@@ -7,7 +7,7 @@ const steps = [
   {
     n: "02",
     title: "Forge it here",
-    body: "Your browser generates the keypair and signs the certificate. Nothing is posted to Signet. There is no issuance API.",
+    body: "Your browser generates the keypair and signs the certificate. Nothing is posted to SelfSignedCert. There is no issuance API.",
   },
   {
     n: "03",

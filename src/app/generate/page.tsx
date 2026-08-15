@@ -5,9 +5,9 @@ import { TypeGuide } from "@/components/generator/type-guide";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata: Metadata = pageMeta({
-  title: "Self-signed SSL & CSR generator (localhost, mTLS, Root CA)",
+  title: "Generate a self-signed SSL certificate online",
   description:
-    "Free online certificate generator: self-signed SSL for localhost, CSR, Root CA, host certificates, and mTLS client certs. Private keys never leave the browser.",
+    "Free self-signed SSL certificate generator on SelfSignedCert. Create localhost HTTPS, CSR, Root CA, host, and mTLS certs in your browser. Private keys never leave the device.",
   path: "/generate",
   keywords: ["self signed certificate generator", "CSR generator", "localhost SSL generator"],
 });

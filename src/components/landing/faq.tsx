@@ -1,7 +1,7 @@
 export const faqs = [
   {
     q: "Do you store my certificate or private key?",
-    a: "No. Generation happens in your browser. Signet’s servers never receive certificates, private keys, CSRs, or PFX files. If you sign in, we can keep a local metadata history on this device — names, dates, fingerprints — not the secrets.",
+    a: "No. Generation happens in your browser. SelfSignedCert’s servers never receive certificates, private keys, CSRs, or PFX files. If you sign in, we can keep a local metadata history on this device — names, dates, fingerprints — not the secrets.",
   },
   {
     q: "How many certificates can I generate?",
@@ -21,7 +21,7 @@ export const faqs = [
   },
   {
     q: "Are self-signed certificates trusted by browsers?",
-    a: "Not automatically. Browsers will warn until you trust the certificate locally. That is expected. Signet is for lab, staging, internal services, and CSRs you send to a real CA.",
+    a: "Not automatically. Browsers will warn until you trust the certificate locally. That is expected. SelfSignedCert is for lab, staging, internal services, and CSRs you send to a real CA.",
   },
   {
     q: "What happens if I refresh after generating?",
@@ -29,11 +29,11 @@ export const faqs = [
   },
   {
     q: "Is this a certificate authority?",
-    a: "No. Signet does not operate a public CA and does not issue publicly trusted certificates. It helps you create keys and certificates on your own machine.",
+    a: "No. SelfSignedCert does not operate a public CA and does not issue publicly trusted certificates. It helps you create keys and certificates on your own machine.",
   },
   {
     q: "Can I check a live website’s SSL certificate?",
-    a: "Yes. Paste a URL on the homepage or the SSL checker. Signet opens a TLS connection to that host and reads the public certificate — issuer, dates, SANs, and days left. We do not store the lookup. Private keys are never involved.",
+    a: "Yes. Paste a URL on the homepage or the SSL checker. SelfSignedCert opens a TLS connection to that host and reads the public certificate — issuer, dates, SANs, and days left. We do not store the lookup. Private keys are never involved.",
   },
   {
     q: "How do I generate a self-signed SSL certificate for localhost?",
@@ -41,7 +41,7 @@ export const faqs = [
   },
   {
     q: "Is this a replacement for OpenSSL?",
-    a: "For interactive work, yes — Signet produces the same kinds of PEM, CSR, and PFX files. For scripts and CI you may still want the OpenSSL CLI. We publish the equivalent commands on the OpenSSL tools page.",
+    a: "For interactive work, yes — SelfSignedCert produces the same kinds of PEM, CSR, and PFX files. For scripts and CI you may still want the OpenSSL CLI. We publish the equivalent commands on the OpenSSL tools page.",
   },
 ];
 

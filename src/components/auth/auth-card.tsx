@@ -26,7 +26,7 @@ export function AuthCard({ mode }: { mode: "login" | "signup" }) {
     <div className="w-full max-w-md rounded-[28px] border border-line bg-surface p-7 shadow-lift">
       <p className="eyebrow">{mode === "login" ? "Welcome back" : "Create account"}</p>
       <h1 className="mt-2 font-serif text-3xl tracking-tight">
-        {mode === "login" ? "Sign in to Signet" : "Join Signet"}
+        {mode === "login" ? "Sign in to SelfSignedCert" : "Join SelfSignedCert"}
       </h1>
       <p className="mt-2 text-sm text-muted">
         Sign in with your Google account. Certificates and private keys still never leave this browser.

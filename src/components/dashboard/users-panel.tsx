@@ -88,7 +88,7 @@ export function UsersPanel() {
         <p className="eyebrow">Users</p>
         <h1 className="mt-2 font-serif text-4xl tracking-tight">Admin only.</h1>
         <p className="mt-3 max-w-xl text-sm text-muted">
-          The user list is stored in Supabase. Add{" "}
+          The user list is stored in the SelfSignedCert Supabase project. Add{" "}
           <span className="font-mono">ADMIN_EMAILS=you@gmail.com</span> in Vercel and{" "}
           <span className="font-mono">.env.local</span>, then sign in with that Google account.
         </p>

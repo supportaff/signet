@@ -1,12 +1,12 @@
 export const site = {
-  name: "Signet",
-  url: "https://signet-lemon.vercel.app",
-  tagline: "Free online SSL, CSR, and mTLS certificate generator",
+  name: "SelfSignedCert",
+  url: "https://selfsignedcert.com",
+  tagline: "Free self-signed SSL certificate generator",
   description:
-    "Generate a self-signed SSL certificate, localhost HTTPS cert, CSR, Root CA, host certificate, or mTLS client certificate in your browser. Private keys are never uploaded.",
-  demoEmail: "demo@signet.dev",
-  demoPassword: "signet",
-  supportEmail: "hello@signet.dev",
+    "Generate a self-signed SSL certificate online for localhost, HTTPS, CSR, Root CA, host certs, or mTLS. Private keys stay in your browser at selfsignedcert.com.",
+  demoEmail: "demo@selfsignedcert.com",
+  demoPassword: "selfsignedcert",
+  supportEmail: "hello@selfsignedcert.com",
 };
 
 export const nav = [

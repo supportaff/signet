@@ -24,7 +24,7 @@ const tools = [
     href: "/tools/openssl",
     icon: Terminal,
     title: "OpenSSL command cheat sheet",
-    body: "Copy-ready openssl req and x509 commands for localhost, CSRs, and PFX — plus the Signet alternative.",
+    body: "Copy-ready openssl req and x509 commands for localhost, CSRs, and PFX — plus the SelfSignedCert alternative.",
   },
 ];
 

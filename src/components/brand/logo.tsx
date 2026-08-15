@@ -40,10 +40,10 @@ export function Logo({
     >
       <SealMark />
       {markOnly ? (
-        <span className="sr-only">Signet</span>
+        <span className="sr-only">SelfSignedCert</span>
       ) : (
-        <span className="font-serif text-[1.35rem] leading-none tracking-[-0.03em]">
-          Signet
+        <span className="font-serif text-[1.15rem] leading-none tracking-[-0.03em] sm:text-[1.25rem]">
+          SelfSignedCert
         </span>
       )}
     </Link>

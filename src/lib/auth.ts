@@ -12,7 +12,7 @@ export interface AuthUser {
 export const DEMO_USER: AuthUser = {
   id: "demo-alex",
   name: "Alex Rivera",
-  email: "demo@signet.dev",
+  email: "demo@selfsignedcert.com",
   plan: "studio",
   createdAt: "2025-11-02T14:20:00.000Z",
 };
@@ -79,7 +79,7 @@ export function loginWithPassword(email: string, password: string): AuthUser {
     throw new Error("That password doesn't match this demo account.");
   }
 
-  throw new Error("No account with that email. Create one, or use demo@signet.dev / signet.");
+  throw new Error("No account with that email. Create one, or continue with Google.");
 }
 
 export function signupWithPassword(name: string, email: string, password: string): AuthUser {

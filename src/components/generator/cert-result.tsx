@@ -106,8 +106,8 @@ export function CertResult({
             </p>
             <p className="mt-1 text-sm text-ink-soft">
               {bundle.type === "root-ca"
-                ? "Trust the CA on your machines. Then issue host certificates signed by it. Signet does not keep this key."
-                : "Signet does not store it. If you leave without downloading, it cannot be recovered."}
+                ? "Trust the CA on your machines. Then issue host certificates signed by it. SelfSignedCert does not keep this key."
+                : "SelfSignedCert does not store it. If you leave without downloading, it cannot be recovered."}
             </p>
           </div>
         </div>

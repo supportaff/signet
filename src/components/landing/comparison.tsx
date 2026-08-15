@@ -20,7 +20,7 @@ export function Comparison() {
               <thead className="bg-bg-muted text-muted">
                 <tr>
                   <th className="px-5 py-4 font-medium"> </th>
-                  <th className="px-5 py-4 font-medium text-wax">Signet</th>
+                  <th className="px-5 py-4 font-medium text-wax">SelfSignedCert</th>
                   <th className="px-5 py-4 font-medium">OpenSSL CLI</th>
                   <th className="px-5 py-4 font-medium">Cloud generators</th>
                 </tr>

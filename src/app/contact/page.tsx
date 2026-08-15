@@ -3,7 +3,7 @@ import { ContactForm } from "@/components/contact/contact-form";
 
 export const metadata: Metadata = {
   title: "Contact",
-  description: "Contact Signet support. Never send a private key — we would refuse it.",
+  description: "Contact SelfSignedCert support. Never send a private key — we would refuse it.",
 };
 
 export default function ContactPage() {

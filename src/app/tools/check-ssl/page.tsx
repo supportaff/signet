@@ -30,7 +30,7 @@ export default async function CheckSslPage({
       <p className="eyebrow">Free tool</p>
       <h1 className="display mt-3 text-5xl">SSL certificate checker.</h1>
       <p className="mt-4 text-lg text-ink-soft">
-        Enter a hostname or URL. Signet completes a TLS handshake with that host
+        Enter a hostname or URL. SelfSignedCert completes a TLS handshake with that host
         and shows the public leaf certificate — subject, issuer, dates, SANs,
         and fingerprints. This is the one tool that leaves your browser: we
         connect to the site you name. We do not store the lookup, and no private

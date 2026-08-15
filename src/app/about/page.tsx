@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "About",
-  description: "Signet is a client-side certificate workshop. We do not operate a CA and we do not store keys.",
+  description:
+    "SelfSignedCert is a free self-signed SSL certificate generator. We do not operate a CA and we do not store keys.",
 };
 
 export default function AboutPage() {
@@ -11,15 +13,17 @@ export default function AboutPage() {
       <p className="eyebrow">About</p>
       <h1 className="display mt-3 text-5xl">A workshop, not a vault.</h1>
       <p className="mt-6 text-lg text-ink-soft">
-        Signet exists because the internet is full of “generate a certificate”
-        forms that quietly take possession of a private key. That is an
-        architectural mistake. We refused to make it.
+        SelfSignedCert exists because the internet is full of “generate a
+        certificate” forms that quietly take possession of a private key. That
+        is an architectural mistake. We refused to make it.
       </p>
       <h2>What we are</h2>
       <p>
-        A browser-native workshop for self-signed TLS certificates, mTLS client
-        certificates, and certificate signing requests. The cryptography runs
-        on your device. The files you download were assembled in this tab.
+        A free online generator for self-signed SSL certificates, localhost
+        HTTPS, mTLS client certificates, Root CAs, host certificates, and
+        certificate signing requests. The cryptography runs on your device at{" "}
+        {site.url.replace("https://", "")}. The files you download were assembled
+        in this tab.
       </p>
       <h2>What we are not</h2>
       <p>
@@ -29,16 +33,9 @@ export default function AboutPage() {
       </p>
       <h2>Why the name</h2>
       <p>
-        A signet was a ring used to seal a letter. The impression was made in
-        the owner’s presence. The wax cooled in their hand. That is the
-        posture we want for keys: created where you stand, never mailed away
-        to be stamped by a stranger.
-      </p>
-      <h2>The Certify question</h2>
-      <p>
-        The working title was Certify. We chose Signet because it is specific,
-        quieter, and harder to confuse with a public CA. The product is the
-        same: local issuance with nothing left on our side.
+        SelfSignedCert is the product and the domain. The name is the job:
+        create a self-signed certificate without sending the private key
+        anywhere. No metaphor required.
       </p>
     </article>
   );

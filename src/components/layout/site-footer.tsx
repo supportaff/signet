@@ -30,6 +30,7 @@ const columns = [
       { href: "/guides/local-certificate-authority", label: "Local CA" },
       { href: "/about", label: "About" },
       { href: "/privacy", label: "Privacy" },
+      { href: "/terms", label: "Terms" },
     ],
   },
 ];
@@ -42,7 +43,7 @@ export function SiteFooter() {
           <Logo />
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted">
             A private notary for TLS. Certificates and keys are created in this
-            browser tab. Signet has nothing to leak because Signet never holds them.
+            browser tab. SelfSignedCert has nothing to leak because it never holds them.
           </p>
         </div>
         {columns.map((column) => (
@@ -62,7 +63,7 @@ export function SiteFooter() {
       </div>
       <div className="border-t border-line">
         <div className="mx-auto flex max-w-6xl flex-col gap-2 px-5 py-5 text-xs text-muted sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} Signet. Keys stay on the device.</p>
+          <p>© {new Date().getFullYear()} SelfSignedCert. Keys stay on the device.</p>
           <p>No certificates. No private keys. No exceptions.</p>
         </div>
       </div>

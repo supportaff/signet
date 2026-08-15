@@ -37,13 +37,13 @@ export function Features() {
   return (
     <section id="features" className="border-t border-line py-20">
       <div className="mx-auto max-w-6xl px-5">
-        <p className="eyebrow">Why Signet</p>
+        <p className="eyebrow">Why SelfSignedCert</p>
         <h2 className="display mt-3 max-w-2xl text-4xl sm:text-5xl">
           A certificate tool that cannot betray you.
         </h2>
         <p className="mt-4 max-w-2xl text-ink-soft">
           Most “online certificate generators” ask you to trust a stranger with a private key.
-          Signet is designed so that trust is unnecessary.
+          SelfSignedCert is designed so that trust is unnecessary.
         </p>
         <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {features.map((feature) => (

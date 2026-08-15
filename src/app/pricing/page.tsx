@@ -32,7 +32,7 @@ const rows: { label: string; values: (string | boolean)[] }[] = [
   { label: "Guest mode", values: [true, true, true] },
   { label: "Saved subject profiles", values: [false, true, true] },
   { label: "Priority support", values: [false, false, true] },
-  { label: "Private keys stored by Signet", values: ["Never", "Never", "Never"] },
+  { label: "Private keys stored by SelfSignedCert", values: ["Never", "Never", "Never"] },
 ];
 
 export default function PricingPage() {

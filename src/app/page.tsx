@@ -16,7 +16,7 @@ export default function Home() {
     {
       "@context": "https://schema.org",
       "@type": "SoftwareApplication",
-      name: "Signet",
+      name: "SelfSignedCert",
       applicationCategory: "SecurityApplication",
       operatingSystem: "Web",
       offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },

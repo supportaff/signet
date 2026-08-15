@@ -24,7 +24,7 @@ export default function CsrGuidePage() {
         The CA only needs the <code>.csr</code>. If a site asks you to upload
         the <code>.key</code>, leave.{" "}
         <Link href="/generate" className="text-wax hover:underline">
-          Signet&apos;s CSR generator
+          SelfSignedCert&apos;s CSR generator
         </Link>{" "}
         creates both in this tab and never posts them.
       </p>

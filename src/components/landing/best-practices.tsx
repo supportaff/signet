@@ -17,7 +17,7 @@ const practices = [
   },
   {
     title: "Let the CA outlive the hosts",
-    body: "A lab CA can last five to ten years. Host certs should be much shorter. If a host would expire after the CA, Signet will refuse to issue it.",
+    body: "A lab CA can last five to ten years. Host certs should be much shorter. If a host would expire after the CA, SelfSignedCert will refuse to issue it.",
   },
   {
     title: "Keep lab certs short-lived",
@@ -54,7 +54,7 @@ export function BestPractices() {
           How to handle what you just forged.
         </h2>
         <p className="mt-4 max-w-2xl text-ink-soft">
-          Signet can mint the files. It cannot keep you from leaking them afterwards.
+          SelfSignedCert can mint the files. It cannot keep you from leaking them afterwards.
           These are the habits that actually matter.
         </p>
         <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-3">

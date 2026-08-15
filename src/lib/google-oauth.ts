@@ -4,17 +4,21 @@ import { site } from "@/lib/site";
 const SCOPES = ["openid", "email", "profile"];
 
 export function authOrigin(request: Request) {
-  if (process.env.VERCEL_ENV === "production") return site.url;
-  const configured = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "");
-  if (configured) return configured;
   const host = (request.headers.get("x-forwarded-host") || request.headers.get("host") || "")
     .split(",")[0]
-    .trim();
+    .trim()
+    .toLowerCase();
   const proto =
     request.headers.get("x-forwarded-proto")?.split(",")[0]?.trim() ||
     (host.includes("localhost") || host.startsWith("127.") ? "http" : "https");
+  if (host.includes("localhost") || host.startsWith("127.")) return `http://${host}`;
+  if (host === "www.selfsignedcert.com") return site.url;
+  if (host === "selfsignedcert.com" || host === "signet-lemon.vercel.app") {
+    return `${proto}://${host}`;
+  }
+  if (process.env.VERCEL_ENV === "production") return site.url;
   if (host) return `${proto}://${host}`;
-  return new URL(request.url).origin;
+  return site.url;
 }
 
 export function googleClientId() {

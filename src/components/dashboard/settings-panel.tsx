@@ -92,9 +92,9 @@ export function SettingsPanel() {
         <div className="rounded-[28px] border border-gold/30 bg-gold/10 p-6 text-sm">
           <p className="font-medium">Supabase tables are not created yet.</p>
           <p className="mt-2 text-muted">
-            Signet needs its own Supabase project. Create one named Signet, add the URL and
-            service role key, then run <span className="font-mono">supabase/schema.sql</span>. After
-            that, sign in once more to record this login.
+            SelfSignedCert needs its dedicated Supabase project tables. Run{" "}
+            <span className="font-mono">supabase/schema.sql</span>, then sign in once more
+            to record this login.
           </p>
         </div>
       ) : null}
@@ -195,7 +195,7 @@ export function SettingsPanel() {
         <section className="rounded-[28px] border border-danger/30 bg-surface p-6">
           <h2 className="font-medium text-danger">Delete account</h2>
           <p className="mt-2 text-sm text-muted">
-            Removes your Signet row, login history, and usage from Supabase. Downloaded certificates
+            Removes your SelfSignedCert row, login history, and usage from Supabase. Downloaded certificates
             stay on your machine. This cannot be undone.
           </p>
           <Label htmlFor="confirm-delete" className="mt-4">

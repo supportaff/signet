@@ -18,7 +18,7 @@ export default function DecodeCertificatePage() {
       <h1 className="display mt-3 text-5xl">SSL certificate decoder.</h1>
       <p className="mt-4 text-lg text-ink-soft">
         Paste a PEM certificate (the block that starts with BEGIN CERTIFICATE).
-        Signet parses it with the same browser library used to generate certs.
+        SelfSignedCert parses it with the same browser library used to generate certs.
         We do not upload the file.
       </p>
       <div className="mt-8">

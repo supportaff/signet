@@ -34,7 +34,7 @@ export default function OpenGraphImage() {
           >
             S
           </div>
-          <div style={{ fontSize: 28 }}>Signet</div>
+          <div style={{ fontSize: 28 }}>SelfSignedCert</div>
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
           <div style={{ fontSize: 72, lineHeight: 0.95, fontFamily: "Georgia, serif", maxWidth: 900 }}>

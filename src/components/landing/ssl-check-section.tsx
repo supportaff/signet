@@ -12,7 +12,7 @@ export function SslCheckSection() {
               Check a live site&apos;s certificate.
             </h2>
             <p className="mt-4 max-w-md text-ink-soft">
-              Paste a URL. Signet opens HTTPS to that host and reads the public
+              Paste a URL. SelfSignedCert opens HTTPS to that host and reads the public
               certificate — issuer, validity, SANs, and days left. We do not
               store the lookup. Private keys are never involved.
             </p>

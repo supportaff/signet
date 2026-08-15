@@ -32,7 +32,7 @@ export default function LocalCaGuidePage() {
         2. Install <code>ca.crt</code> in the OS or browser trust store.
       </p>
       <p>
-        3. Issue a host certificate for each hostname. Signet can use the CA
+        3. Issue a host certificate for each hostname. SelfSignedCert can use the CA
         still sitting in this tab, or you can paste the CA PEM.
       </p>
       <h2>Do not put the CA key on the web server</h2>

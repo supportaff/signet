@@ -26,7 +26,7 @@ export default function LocalhostGuidePage() {
         <code>localhost</code> as a DNS SAN. Add <code>127.0.0.1</code> if you
         use the IP.
       </p>
-      <h2>How to generate one in Signet</h2>
+      <h2>How to generate one on SelfSignedCert</h2>
       <p>
         Open the{" "}
         <Link href="/generate" className="text-wax hover:underline">

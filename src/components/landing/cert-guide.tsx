@@ -110,7 +110,7 @@ export function CertGuide() {
         <p className="mt-5 max-w-2xl text-lg leading-relaxed text-ink-soft">
           A certificate binds a public key to a name. In a private PKI you forge a
           Root CA once, trust it on your machines, then issue a host certificate
-          for each server. Signet does that pairing in this browser. Nothing is uploaded.
+          for each server. SelfSignedCert does that pairing in this browser. Nothing is uploaded.
         </p>
 
         <div className="mt-10 grid gap-3 sm:grid-cols-3">

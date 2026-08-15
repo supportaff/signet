@@ -71,7 +71,7 @@ export function DashboardOverview() {
           <div className="px-5 py-16 text-center">
             <p className="font-serif text-2xl">No local records yet</p>
             <p className="mx-auto mt-2 max-w-sm text-sm text-muted">
-              Generate a certificate and Signet will remember the name and fingerprint on this device — never the key.
+              Generate a certificate and SelfSignedCert will remember the name and fingerprint on this device — never the key.
             </p>
             <Link href="/generate" className={cn(buttonVariants({ variant: "outline" }), "mt-5")}>
               Generate your first

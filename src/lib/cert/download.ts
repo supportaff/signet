@@ -59,7 +59,7 @@ export async function downloadZip(bundle: GeneratedCertificate, pfxPassword?: st
   const zip = new JSZip();
   const name = baseName(bundle);
   const readme = [
-    `Signet export — ${bundle.commonName}`,
+    `SelfSignedCert export — ${bundle.commonName}`,
     ``,
     `Type: ${bundle.type}`,
     `Created: ${bundle.createdAt}`,
@@ -67,7 +67,7 @@ export async function downloadZip(bundle: GeneratedCertificate, pfxPassword?: st
     bundle.fingerprintSha256 ? `SHA-256: ${bundle.fingerprintSha256}` : "",
     ``,
     `This archive was assembled in your browser.`,
-    `Signet never received these files.`,
+    `SelfSignedCert never received these files.`,
     ``,
     `Keep the private key offline. Anyone with the key can impersonate this identity.`,
   ]

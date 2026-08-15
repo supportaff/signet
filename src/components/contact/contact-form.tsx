@@ -29,7 +29,7 @@ export function ContactForm() {
       <div className="mt-10 rounded-[28px] border border-line bg-surface p-8">
         <p className="font-serif text-3xl">Received on this device.</p>
         <p className="mt-3 text-sm text-muted">
-          In production this would email hello@signet.dev. The demo stores the
+          Messages go to hello@selfsignedcert.com. This form does not store the
           note in local storage only.
         </p>
       </div>

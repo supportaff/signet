@@ -4,7 +4,7 @@ import { AuthCard } from "@/components/auth/auth-card";
 
 export const metadata: Metadata = {
   title: "Sign in",
-  description: "Sign in to Signet with your Google account. Certificates are still generated locally.",
+  description: "Sign in to SelfSignedCert with your Google account. Certificates are still generated locally.",
 };
 
 export default function LoginPage() {

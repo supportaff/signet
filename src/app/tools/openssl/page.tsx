@@ -5,7 +5,7 @@ import { pageMeta } from "@/lib/seo";
 export const metadata: Metadata = pageMeta({
   title: "OpenSSL self-signed certificate commands for localhost",
   description:
-    "Copy OpenSSL commands to create a self-signed SSL certificate, CSR, or PFX for localhost — or skip the CLI and generate the same files in Signet.",
+    "Copy OpenSSL commands to create a self-signed SSL certificate, CSR, or PFX for localhost — or skip the CLI and generate the same files on SelfSignedCert.",
   path: "/tools/openssl",
   keywords: ["openssl self signed certificate", "openssl req localhost", "openssl csr"],
 });
@@ -54,7 +54,7 @@ export default function OpensslPage() {
       <h2>When the CLI is the wrong tool</h2>
       <p>
         OpenSSL is correct and scriptable. It is also easy to omit SANs, which
-        makes browsers reject localhost HTTPS. Signet fills SANs by default
+        makes browsers reject localhost HTTPS. SelfSignedCert fills SANs by default
         and never sends the private key off the device.
       </p>
     </article>
