@@ -5,6 +5,7 @@ const routes: { path: string; changeFrequency: MetadataRoute.Sitemap[0]["changeF
   { path: "", changeFrequency: "weekly", priority: 1 },
   { path: "/generate", changeFrequency: "weekly", priority: 0.95 },
   { path: "/tools", changeFrequency: "weekly", priority: 0.9 },
+  { path: "/tools/check-ssl", changeFrequency: "weekly", priority: 0.9 },
   { path: "/tools/decode-certificate", changeFrequency: "monthly", priority: 0.85 },
   { path: "/tools/decode-csr", changeFrequency: "monthly", priority: 0.85 },
   { path: "/tools/openssl", changeFrequency: "monthly", priority: 0.8 },

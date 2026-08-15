@@ -36,10 +36,17 @@ export function Hero() {
               Generate a certificate
               <ArrowRight className="h-4 w-4" />
             </Link>
-            <Link href="/tools" className={cn(buttonVariants({ variant: "outline", size: "lg" }))}>
-              Free SSL tools
+            <Link href="/#check" className={cn(buttonVariants({ variant: "outline", size: "lg" }))}>
+              Check a site certificate
             </Link>
           </div>
+          <p className="animate-rise mt-4 text-sm text-muted" style={{ animationDelay: "240ms" }}>
+            Or{" "}
+            <Link href="/tools" className="text-ink-soft underline-offset-4 hover:text-ink hover:underline">
+              browse the free SSL tools
+            </Link>
+            .
+          </p>
           <div className="mt-10 grid gap-4 sm:grid-cols-2">
             <div className="flex items-start gap-3 rounded-2xl border border-line bg-surface/70 p-4">
               <LockKeyhole className="mt-0.5 h-4 w-4 text-wax" />

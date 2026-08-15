@@ -5,4 +5,5 @@ Signet is a free online SSL certificate generator. It creates self-signed certif
 Site: https://signet-lemon.vercel.app
 Generator: https://signet-lemon.vercel.app/generate
 Tools: https://signet-lemon.vercel.app/tools
+SSL checker: https://signet-lemon.vercel.app/tools/check-ssl
 Guides: https://signet-lemon.vercel.app/guides

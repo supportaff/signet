@@ -5,12 +5,17 @@ import { pageMeta } from "@/lib/seo";
 export const metadata: Metadata = pageMeta({
   title: "Free SSL tools — decode certificates, CSRs, OpenSSL commands",
   description:
-    "Free browser SSL tools: decode a PEM certificate, inspect a CSR, and copy OpenSSL commands. Nothing is uploaded.",
+    "Free browser SSL tools: check a live site certificate, decode a PEM, inspect a CSR, and copy OpenSSL commands.",
   path: "/tools",
-  keywords: ["free SSL tools", "certificate decoder", "CSR decoder"],
+  keywords: ["free SSL tools", "SSL checker", "certificate decoder", "CSR decoder"],
 });
 
 const tools = [
+  {
+    href: "/tools/check-ssl",
+    title: "Live SSL checker",
+    body: "Enter a URL and see issuer, validity, SANs, expiry, and hostname match.",
+  },
   {
     href: "/tools/decode-certificate",
     title: "SSL certificate decoder",

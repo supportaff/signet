@@ -32,6 +32,10 @@ export const faqs = [
     a: "No. Signet does not operate a public CA and does not issue publicly trusted certificates. It helps you create keys and certificates on your own machine.",
   },
   {
+    q: "Can I check a live website’s SSL certificate?",
+    a: "Yes. Paste a URL on the homepage or the SSL checker. Signet opens a TLS connection to that host and reads the public certificate — issuer, dates, SANs, and days left. We do not store the lookup. Private keys are never involved.",
+  },
+  {
     q: "How do I generate a self-signed SSL certificate for localhost?",
     a: "Use the generator, keep the common name as localhost, and include localhost plus 127.0.0.1 in the SANs. Download the .crt and .key. Browsers will warn until you trust the certificate or a local Root CA.",
   },

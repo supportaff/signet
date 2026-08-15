@@ -15,6 +15,7 @@ const columns = [
     title: "Free tools",
     links: [
       { href: "/tools", label: "All tools" },
+      { href: "/tools/check-ssl", label: "Check site certificate" },
       { href: "/tools/decode-certificate", label: "Decode SSL certificate" },
       { href: "/tools/decode-csr", label: "Decode CSR" },
       { href: "/tools/openssl", label: "OpenSSL commands" },

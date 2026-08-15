@@ -8,6 +8,7 @@ import { FreeTools } from "@/components/landing/free-tools";
 import { Hero } from "@/components/landing/hero";
 import { HowItWorks } from "@/components/landing/how-it-works";
 import { PricingPreview } from "@/components/landing/pricing-preview";
+import { SslCheckSection } from "@/components/landing/ssl-check-section";
 import { site } from "@/lib/site";
 
 export default function Home() {
@@ -51,6 +52,7 @@ export default function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <Hero />
+      <SslCheckSection />
       <Features />
       <HowItWorks />
       <FreeTools />

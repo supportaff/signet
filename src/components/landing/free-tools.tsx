@@ -1,7 +1,13 @@
 import Link from "next/link";
-import { FileSearch, FileText, Terminal } from "lucide-react";
+import { FileSearch, FileText, Globe, Terminal } from "lucide-react";
 
 const tools = [
+  {
+    href: "/tools/check-ssl",
+    icon: Globe,
+    title: "Live SSL checker",
+    body: "Enter a URL and read the public certificate: issuer, expiry, SANs, and whether the hostname matches.",
+  },
   {
     href: "/tools/decode-certificate",
     icon: FileSearch,
@@ -34,7 +40,7 @@ export function FreeTools() {
           These pages exist so you can check a certificate without pasting a
           private key into a stranger&apos;s form. Same privacy rule as the generator.
         </p>
-        <div className="mt-10 grid gap-4 md:grid-cols-3">
+        <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {tools.map((tool) => (
             <Link
               key={tool.href}

@@ -25,7 +25,11 @@ export default function DecodeCertificatePage() {
         <InspectBox kind="certificate" />
       </div>
       <p className="mt-8 text-sm text-muted">
-        Need a new file instead?{" "}
+        Checking a live website instead?{" "}
+        <Link href="/tools/check-ssl" className="text-wax hover:underline">
+          Inspect a site certificate
+        </Link>
+        . Need a new file instead?{" "}
         <Link href="/generate" className="text-wax hover:underline">
           Generate a self-signed SSL certificate
         </Link>{" "}
