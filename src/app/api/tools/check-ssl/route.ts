@@ -1,38 +1,10 @@
 import { NextResponse } from "next/server";
+import { allowRequest, clientIp } from "@/lib/rate-limit";
 import { checkRemoteCertificate, SslCheckError } from "@/lib/ssl-check";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export const maxDuration = 15;
-
-const WINDOW_MS = 60_000;
-const LIMIT = 8;
-const buckets = new Map<string, { count: number; reset: number }>();
-
-function clientIp(request: Request) {
-  const vercel = request.headers.get("x-vercel-forwarded-for");
-  if (vercel) return vercel.split(",")[0]?.trim() || "unknown";
-  const real = request.headers.get("x-real-ip");
-  if (real) return real.trim();
-  const forwarded = request.headers.get("x-forwarded-for");
-  if (forwarded) {
-    const parts = forwarded.split(",").map((part) => part.trim()).filter(Boolean);
-    return parts.at(-1) || "unknown";
-  }
-  return "unknown";
-}
-
-function allow(ip: string) {
-  const now = Date.now();
-  const bucket = buckets.get(ip);
-  if (!bucket || now > bucket.reset) {
-    buckets.set(ip, { count: 1, reset: now + WINDOW_MS });
-    return true;
-  }
-  if (bucket.count >= LIMIT) return false;
-  bucket.count += 1;
-  return true;
-}
 
 async function readUrl(request: Request) {
   if (request.method === "GET") {
@@ -43,7 +15,7 @@ async function readUrl(request: Request) {
 }
 
 async function handle(request: Request) {
-  if (!allow(clientIp(request))) {
+  if (!allowRequest(clientIp(request), 8, 60_000)) {
     return NextResponse.json(
       { error: "Too many checks. Wait a minute and try again." },
       { status: 429 },

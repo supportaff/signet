@@ -344,7 +344,7 @@ export async function buildPkcs12(
   }
   const p12Asn1 = forge.pkcs12.toPkcs12Asn1(key, chain, password, {
     algorithm: "3des",
-    friendlyName: friendlyName || "signet",
+    friendlyName: friendlyName || "selfsignedcert",
     generateLocalKeyId: true,
   });
   const der = forge.asn1.toDer(p12Asn1).getBytes();

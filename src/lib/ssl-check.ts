@@ -122,7 +122,7 @@ function isBlockedV6(ip: string): boolean {
   return false;
 }
 
-export async function checkRemoteCertificate(input: string): Promise<SslCheckResult> {
+export async function resolvePublicHttpsTarget(input: string) {
   const target = parseTarget(input);
   assertAllowedHost(target.hostname);
 
@@ -140,7 +140,11 @@ export async function checkRemoteCertificate(input: string): Promise<SslCheckRes
     ip = (publicRecords.find((record) => record.family === 4) ?? publicRecords[0]).address;
   }
 
-  return connectAndRead({ ...target, ip, input: input.trim() });
+  return { ...target, ip, input: input.trim() };
+}
+
+export async function checkRemoteCertificate(input: string): Promise<SslCheckResult> {
+  return connectAndRead(await resolvePublicHttpsTarget(input));
 }
 
 function connectAndRead(opts: {

@@ -1,31 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { GUIDES } from "@/lib/catalog";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata: Metadata = pageMeta({
   title: "SSL & certificate guides",
   description:
-    "How to create a self-signed SSL certificate for localhost, generate a CSR online, and run a local certificate authority — without uploading private keys.",
+    "How to create a self-signed SSL certificate for localhost, fix Chrome certificate errors, trust a local CA on Windows, macOS, and Linux, and generate a CSR without uploading the key.",
   path: "/guides",
 });
 
-const guides = [
-  {
-    href: "/guides/self-signed-ssl-localhost",
-    title: "Self-signed SSL for localhost HTTPS",
-    body: "Why browsers warn, how SANs work, and how to generate a localhost certificate.",
-  },
-  {
-    href: "/guides/generate-csr-online",
-    title: "Generate a CSR without sending the key",
-    body: "What a certificate signing request is, and how to create one in the browser.",
-  },
-  {
-    href: "/guides/local-certificate-authority",
-    title: "Make a local CA and sign host certs",
-    body: "Trust one Root CA, then issue host certificates for every internal service.",
-  },
-];
+const guides = GUIDES;
 
 export default function GuidesPage() {
   return (

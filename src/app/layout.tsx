@@ -26,7 +26,7 @@ const newsreader = Newsreader({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(site.url),
+  metadataBase: new URL(site.canonical),
   title: {
     default: "SelfSignedCert — Free Self-Signed SSL Certificate Generator",
     template: `%s · ${site.name}`,
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "SelfSignedCert — Free Self-Signed SSL Certificate Generator",
     description: site.description,
-    url: site.url,
+    url: site.canonical,
     siteName: site.name,
     type: "website",
     locale: "en_US",

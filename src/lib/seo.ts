@@ -34,7 +34,88 @@ export const seoKeywords = [
   "generate SSL without OpenSSL",
   "SAN certificate generator",
   "wildcard localhost certificate",
+  "NET::ERR_CERT_AUTHORITY_INVALID",
+  "mkcert alternative",
+  "PEM to PFX converter",
+  "HSTS checker",
+  "SSH key generator online",
 ];
+
+export function organizationJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: site.name,
+    url: site.canonical,
+    email: site.supportEmail,
+    description: site.description,
+  };
+}
+
+export function softwareApplicationJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: site.name,
+    applicationCategory: "DeveloperApplication",
+    applicationSubCategory: "SecurityApplication",
+    operatingSystem: "Web",
+    url: site.canonical,
+    description: site.description,
+    offers: [
+      { "@type": "Offer", name: "Free", price: "0", priceCurrency: "USD" },
+      { "@type": "Offer", name: "Plus", price: "5", priceCurrency: "USD", billingIncrement: "P1M" },
+      { "@type": "Offer", name: "Studio", price: "12", priceCurrency: "USD", billingIncrement: "P1M" },
+    ],
+    featureList: [
+      "Self-signed SSL certificate generator",
+      "CSR generator",
+      "Root CA and host certificates",
+      "mTLS client certificates",
+      "Client-side private keys",
+    ],
+    author: { "@type": "Organization", name: site.name, email: site.supportEmail },
+  };
+}
+
+export function howtoJsonLd({
+  name,
+  description,
+  path,
+  steps,
+}: {
+  name: string;
+  description: string;
+  path: string;
+  steps: { name: string; text: string }[];
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    name,
+    description,
+    url: `${site.canonical}${path}`,
+    step: steps.map((step, index) => ({
+      "@type": "HowToStep",
+      position: index + 1,
+      name: step.name,
+      text: step.text,
+    })),
+  };
+}
+
+export function breadcrumbJsonLd(items: { name: string; path: string }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.name,
+      item: `${site.canonical}${item.path}`,
+    })),
+  };
+}
 
 export function pageMeta({
   title,
@@ -47,7 +128,7 @@ export function pageMeta({
   path: string;
   keywords?: string[];
 }): Metadata {
-  const url = `${site.url}${path}`;
+  const url = `${site.canonical}${path}`;
   return {
     title,
     description,

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { GuideArticle } from "@/components/guides/guide-article";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata: Metadata = pageMeta({
@@ -12,13 +13,17 @@ export const metadata: Metadata = pageMeta({
 
 export default function LocalhostGuidePage() {
   return (
-    <article className="prose-legal mx-auto max-w-2xl px-5 py-16">
-      <p className="eyebrow">Guide</p>
-      <h1 className="display mt-3 text-5xl">Self-signed SSL for localhost.</h1>
-      <p className="mt-4 text-lg text-ink-soft">
-        A self-signed certificate is a TLS cert you signed yourself. It is the
-        fastest way to turn on HTTPS for local development.
-      </p>
+    <GuideArticle
+      path="/guides/self-signed-ssl-localhost"
+      title="Self-signed SSL for localhost."
+      lede="A self-signed certificate is a TLS cert you signed yourself. It is the fastest way to turn on HTTPS for local development."
+      steps={[
+        { name: "Set the name", text: "Use localhost as the common name and add localhost plus 127.0.0.1 as SANs." },
+        { name: "Generate", text: "Create the certificate in the browser and download the .crt and .key." },
+        { name: "Point the server", text: "Configure nginx, Caddy, or your framework at those files." },
+        { name: "Trust if needed", text: "Browsers will warn until you trust the cert or a local Root CA." },
+      ]}
+    >
       <h2>What you actually need</h2>
       <p>
         Browsers check Subject Alternative Names, not just the common name. If
@@ -45,6 +50,6 @@ export default function LocalhostGuidePage() {
         </Link>{" "}
         and issue a host certificate instead.
       </p>
-    </article>
+    </GuideArticle>
   );
 }

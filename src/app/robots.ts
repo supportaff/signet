@@ -8,7 +8,7 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: ["/dashboard", "/login", "/signup", "/billing", "/api/"],
     },
-    sitemap: `${site.url}/sitemap.xml`,
-    host: site.url,
+    sitemap: `${site.canonical}/sitemap.xml`,
+    host: site.canonical,
   };
 }

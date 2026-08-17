@@ -4,9 +4,14 @@ SelfSignedCert (https://selfsignedcert.com) is a free online self-signed SSL cer
 
 Site: https://selfsignedcert.com
 Generator: https://selfsignedcert.com/generate
-Tools: https://selfsignedcert.com/tools
-SSL checker: https://selfsignedcert.com/tools/check-ssl
-Guides: https://selfsignedcert.com/guides
+Tools: https://www.selfsignedcert.com/tools
+SSL checker: https://www.selfsignedcert.com/tools/check-ssl
+PEM/DER/PFX converter: https://www.selfsignedcert.com/tools/convert
+Chain validator: https://www.selfsignedcert.com/tools/validate-chain
+HSTS checker: https://www.selfsignedcert.com/tools/security-headers
+CT lookup: https://www.selfsignedcert.com/tools/ct-lookup
+SSH keys: https://www.selfsignedcert.com/tools/ssh-keygen
+Guides: https://www.selfsignedcert.com/guides
 Privacy: https://selfsignedcert.com/privacy
 Terms: https://selfsignedcert.com/terms
 Contact: selfsignedcert@klickleads.com

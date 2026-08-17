@@ -1,42 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { TOOLS } from "@/lib/catalog";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata: Metadata = pageMeta({
-  title: "Free SSL tools — decode certificates, CSRs, OpenSSL commands",
+  title: "Free SSL tools — decode, convert, check expiry, generate SSH keys",
   description:
-    "Free browser SSL tools: check a live site certificate, decode a PEM, inspect a CSR, and copy OpenSSL commands.",
+    "Free browser SSL tools: live checker, PEM/DER/PFX converter, chain validator, HSTS headers, CT lookup, SSH keys, and OpenSSL commands.",
   path: "/tools",
-  keywords: ["free SSL tools", "SSL checker", "certificate decoder", "CSR decoder"],
+  keywords: ["free SSL tools", "SSL checker", "PEM to PFX", "HSTS checker", "SSH key generator"],
 });
 
-const tools = [
-  {
-    href: "/tools/check-ssl",
-    title: "Live SSL checker",
-    body: "Enter a URL and see issuer, validity, SANs, expiry, and hostname match.",
-  },
-  {
-    href: "/tools/decode-certificate",
-    title: "SSL certificate decoder",
-    body: "Read subject, issuer, SANs, dates, and fingerprints from a .crt PEM.",
-  },
-  {
-    href: "/tools/decode-csr",
-    title: "CSR decoder",
-    body: "Check a certificate signing request before you send it to a CA.",
-  },
-  {
-    href: "/tools/openssl",
-    title: "OpenSSL command cheat sheet",
-    body: "Copy openssl req / x509 / pkcs12 commands for localhost and CSRs.",
-  },
-  {
-    href: "/generate",
-    title: "Certificate generator",
-    body: "Create self-signed SSL, Root CA, host, mTLS, or CSR files in the browser.",
-  },
-];
+const tools = [...TOOLS, { href: "/generate", title: "Certificate generator", body: "Create self-signed SSL, Root CA, host, mTLS, or CSR files in the browser." }];
 
 export default function ToolsPage() {
   return (

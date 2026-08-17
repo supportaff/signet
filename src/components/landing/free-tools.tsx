@@ -9,22 +9,22 @@ const tools = [
     body: "Enter a URL and read the public certificate: issuer, expiry, SANs, and whether the hostname matches.",
   },
   {
-    href: "/tools/decode-certificate",
+    href: "/tools/convert",
     icon: FileSearch,
-    title: "SSL certificate decoder",
-    body: "Paste a PEM .crt and read subject, SANs, validity, and SHA-256 fingerprint. Nothing is uploaded.",
+    title: "PEM / DER / PFX converter",
+    body: "Convert encodings and pack a PFX in this tab. The password and key never upload.",
   },
   {
-    href: "/tools/decode-csr",
+    href: "/tools/security-headers",
     icon: FileText,
-    title: "CSR decoder",
-    body: "Inspect a certificate signing request before you send it to a CA. Runs locally in this tab.",
+    title: "HSTS & headers checker",
+    body: "See whether a public site sends HSTS, CSP, and clickjacking headers.",
   },
   {
-    href: "/tools/openssl",
+    href: "/tools/ssh-keygen",
     icon: Terminal,
-    title: "OpenSSL command cheat sheet",
-    body: "Copy-ready openssl req and x509 commands for localhost, CSRs, and PFX — plus the SelfSignedCert alternative.",
+    title: "SSH key generator",
+    body: "Mint an RSA or ECDSA key pair with Web Crypto. Copy the OpenSSH public key.",
   },
 ];
 

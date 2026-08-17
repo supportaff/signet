@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { GuideArticle } from "@/components/guides/guide-article";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata: Metadata = pageMeta({
@@ -12,13 +13,16 @@ export const metadata: Metadata = pageMeta({
 
 export default function CsrGuidePage() {
   return (
-    <article className="prose-legal mx-auto max-w-2xl px-5 py-16">
-      <p className="eyebrow">Guide</p>
-      <h1 className="display mt-3 text-5xl">Generate a CSR online.</h1>
-      <p className="mt-4 text-lg text-ink-soft">
-        A CSR is not a certificate. It is a signed request that carries your
-        public key and identity. A CA turns it into a trusted cert.
-      </p>
+    <GuideArticle
+      path="/guides/generate-csr-online"
+      title="Generate a CSR online."
+      lede="A CSR is not a certificate. It is a signed request that carries your public key and identity. A CA turns it into a trusted cert."
+      steps={[
+        { name: "Generate locally", text: "Create the key and CSR in the browser." },
+        { name: "Send only the CSR", text: "Give the CA the .csr. Keep the .key." },
+        { name: "Install the reply", text: "Pair the issued .crt with the same key." },
+      ]}
+    >
       <h2>Never send the private key</h2>
       <p>
         The CA only needs the <code>.csr</code>. If a site asks you to upload
@@ -37,6 +41,6 @@ export default function CsrGuidePage() {
         </Link>{" "}
         if you want to check the subject.
       </p>
-    </article>
+    </GuideArticle>
   );
 }

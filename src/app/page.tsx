@@ -9,20 +9,15 @@ import { Hero } from "@/components/landing/hero";
 import { HowItWorks } from "@/components/landing/how-it-works";
 import { PricingPreview } from "@/components/landing/pricing-preview";
 import { SslCheckSection } from "@/components/landing/ssl-check-section";
+import { WorksWith } from "@/components/landing/works-with";
+import { JsonLd } from "@/components/seo/json-ld";
+import { organizationJsonLd, softwareApplicationJsonLd } from "@/lib/seo";
 import { site } from "@/lib/site";
 
 export default function Home() {
   const jsonLd = [
-    {
-      "@context": "https://schema.org",
-      "@type": "SoftwareApplication",
-      name: "SelfSignedCert",
-      applicationCategory: "SecurityApplication",
-      operatingSystem: "Web",
-      offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
-      description: site.description,
-      url: site.url,
-    },
+    softwareApplicationJsonLd(),
+    organizationJsonLd(),
     {
       "@context": "https://schema.org",
       "@type": "FAQPage",
@@ -36,23 +31,16 @@ export default function Home() {
       "@context": "https://schema.org",
       "@type": "WebSite",
       name: site.name,
-      url: site.url,
-      potentialAction: {
-        "@type": "SearchAction",
-        target: `${site.url}/tools?q={search_term_string}`,
-        "query-input": "required name=search_term_string",
-      },
+      url: site.canonical,
     },
   ];
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <JsonLd data={jsonLd} />
       <Hero />
       <SslCheckSection />
+      <WorksWith />
       <Features />
       <HowItWorks />
       <FreeTools />

@@ -33,6 +33,13 @@ export default function AboutPage() {
         that browsers will trust by default. We do not escrow keys. We do not
         “sync your certificates to the cloud.”
       </p>
+      <h2>Who writes this</h2>
+      <p>
+        The operator comes from cybersecurity and operational technology work — the kind of environment
+        where a default appliance certificate and a copied private key are both incidents. The guides
+        are written that way: trust a CA once, never upload a key, do not click through real browser
+        warnings.
+      </p>
       <h2>Why the name</h2>
       <p>
         SelfSignedCert is the product and the domain. The name is the job:

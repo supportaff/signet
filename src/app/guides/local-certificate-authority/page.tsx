@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { GuideArticle } from "@/components/guides/guide-article";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata: Metadata = pageMeta({
@@ -12,14 +13,16 @@ export const metadata: Metadata = pageMeta({
 
 export default function LocalCaGuidePage() {
   return (
-    <article className="prose-legal mx-auto max-w-2xl px-5 py-16">
-      <p className="eyebrow">Guide</p>
-      <h1 className="display mt-3 text-5xl">A local CA, then host certs.</h1>
-      <p className="mt-4 text-lg text-ink-soft">
-        Trusting a new self-signed cert on every laptop does not scale. A Root
-        CA is one trust decision. Host certificates are the leaves you put on
-        servers.
-      </p>
+    <GuideArticle
+      path="/guides/local-certificate-authority"
+      title="A local CA, then host certs."
+      lede="Trusting a new self-signed cert on every laptop does not scale. A Root CA is one trust decision. Host certificates are the leaves you put on servers."
+      steps={[
+        { name: "Forge a Root CA", text: "Download ca.crt and keep ca.key offline." },
+        { name: "Trust it once", text: "Install ca.crt in the OS or browser store." },
+        { name: "Issue host certs", text: "Mint a leaf for each hostname signed by that CA." },
+      ]}
+    >
       <h2>The three steps</h2>
       <p>
         1.{" "}
@@ -40,6 +43,6 @@ export default function LocalCaGuidePage() {
         Anyone with the CA private key can impersonate every host you issue.
         The host <code>.key</code> belongs on the server. The CA key does not.
       </p>
-    </article>
+    </GuideArticle>
   );
 }
