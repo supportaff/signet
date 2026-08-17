@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/admin";
 import {
+  countRowsSince,
   deleteSignetUser,
   getTrackingStatus,
   listCertificateEvents,
@@ -26,20 +27,49 @@ export async function GET() {
   ]);
 
   const monthStart = periodStartIso();
-  const certsThisMonth = certificates.filter((item) => item.created_at >= monthStart).length;
-  const loginsThisMonth = logins.filter((item) => item.created_at >= monthStart).length;
+  const now = Date.now();
+  const dayAgo = new Date(now - 86_400_000).toISOString();
+  const weekAgo = new Date(now - 7 * 86_400_000).toISOString();
+  const monthAgo = new Date(now - 30 * 86_400_000).toISOString();
+  const [certsThisMonth, loginsThisMonth, paymentsThisMonth] = await Promise.all([
+    countRowsSince("signet_certificate_events", monthStart),
+    countRowsSince("signet_login_events", monthStart),
+    countRowsSince("signet_payments", monthStart),
+  ]);
+  const signupsToday = users.filter((user) => user.created_at >= dayAgo).length;
+  const signups7d = users.filter((user) => user.created_at >= weekAgo).length;
+  const signups30d = users.filter((user) => user.created_at >= monthAgo).length;
+  const free = users.filter((user) => user.plan === "free").length;
+  const plus = users.filter((user) => user.plan === "plus").length;
+  const studio = users.filter((user) => user.plan === "studio").length;
+  const paid = plus + studio;
+  const signupSeries = Array.from({ length: 14 }, (_, index) => {
+    const day = new Date(Date.UTC(new Date().getUTCFullYear(), new Date().getUTCMonth(), new Date().getUTCDate() - (13 - index)));
+    const start = day.toISOString();
+    const end = new Date(day.getTime() + 86_400_000).toISOString();
+    return {
+      date: start.slice(0, 10),
+      count: users.filter((user) => user.created_at >= start && user.created_at < end).length,
+    };
+  });
   const metrics = {
     users: users.length,
-    free: users.filter((user) => user.plan === "free").length,
-    plus: users.filter((user) => user.plan === "plus").length,
-    studio: users.filter((user) => user.plan === "studio").length,
+    free,
+    plus,
+    studio,
     active: users.filter((user) => (user.plan_status || "active") === "active").length,
     canceled: users.filter((user) => user.plan_status === "canceled" || user.plan_status === "expired").length,
-    paid: users.filter((user) => user.plan === "plus" || user.plan === "studio").length,
+    paid,
+    paidPercent: users.length ? Math.round((paid / users.length) * 100) : 0,
+    signupsToday,
+    signups7d,
+    signups30d,
     certsThisMonth,
     loginsThisMonth,
+    paymentsThisMonth,
     transactions: payments.length,
     lifetimeCerts: users.reduce((sum, user) => sum + (user.certs_used || 0), 0),
+    signupSeries,
   };
 
   return NextResponse.json({

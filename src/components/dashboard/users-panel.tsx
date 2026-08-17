@@ -39,10 +39,16 @@ type AdminPayload = {
     active: number;
     canceled: number;
     paid: number;
+    paidPercent: number;
+    signupsToday: number;
+    signups7d: number;
+    signups30d: number;
     certsThisMonth: number;
     loginsThisMonth: number;
+    paymentsThisMonth: number;
     transactions: number;
     lifetimeCerts: number;
+    signupSeries: { date: string; count: number }[];
   };
 };
 
@@ -141,8 +147,8 @@ export function UsersPanel() {
     <DashboardShell>
     <div className="space-y-6">
       <div>
-        <p className="eyebrow">Admin</p>
-        <h1 className="mt-2 font-serif text-4xl tracking-tight">Users, plans, transactions.</h1>
+        <p className="eyebrow">Admin analytics</p>
+        <h1 className="mt-2 font-serif text-4xl tracking-tight">Users, signups, plans.</h1>
         <p className="mt-2 max-w-xl text-sm text-muted">
           Account metadata only — certificates and private keys are never stored.
         </p>
@@ -155,18 +161,25 @@ export function UsersPanel() {
       ) : null}
 
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <Stat label="Users" value={String(metrics?.users ?? users.length)} />
-        <Stat label="Paid (Plus + Studio)" value={String(metrics?.paid ?? 0)} />
-        <Stat label="Active plans" value={String(metrics?.active ?? 0)} />
-        <Stat label="Canceled / expired" value={String(metrics?.canceled ?? 0)} />
+        <Stat label="Signed-up users" value={String(metrics?.users ?? users.length)} />
+        <Stat label="New today" value={String(metrics?.signupsToday ?? 0)} />
+        <Stat label="New last 7 days" value={String(metrics?.signups7d ?? 0)} />
+        <Stat label="New last 30 days" value={String(metrics?.signups30d ?? 0)} />
         <Stat label="Free" value={String(metrics?.free ?? 0)} />
+        <Stat label="Paid (Plus + Studio)" value={String(metrics?.paid ?? 0)} />
         <Stat label="Plus" value={String(metrics?.plus ?? 0)} />
         <Stat label="Studio" value={String(metrics?.studio ?? 0)} />
+        <Stat label="Paid conversion" value={`${metrics?.paidPercent ?? 0}%`} />
+        <Stat label="Active plans" value={String(metrics?.active ?? 0)} />
+        <Stat label="Canceled / expired" value={String(metrics?.canceled ?? 0)} />
         <Stat label="Certs this month" value={String(metrics?.certsThisMonth ?? 0)} />
         <Stat label="Logins this month" value={String(metrics?.loginsThisMonth ?? 0)} />
-        <Stat label="Transactions" value={String(metrics?.transactions ?? payments.length)} />
+        <Stat label="Payments this month" value={String(metrics?.paymentsThisMonth ?? 0)} />
+        <Stat label="Transactions logged" value={String(metrics?.transactions ?? payments.length)} />
         <Stat label="Lifetime certs" value={String(metrics?.lifetimeCerts ?? 0)} />
       </div>
+
+      <SignupChart series={metrics?.signupSeries ?? []} />
 
       <Input
         value={query}
@@ -329,5 +342,26 @@ function Stat({ label, value }: { label: string; value: string }) {
       <p className="font-serif text-3xl">{value}</p>
       <p className="mt-1 text-sm text-muted">{label}</p>
     </div>
+  );
+}
+
+function SignupChart({ series }: { series: { date: string; count: number }[] }) {
+  const max = Math.max(1, ...series.map((item) => item.count));
+  return (
+    <section className="rounded-[28px] border border-line bg-surface p-6">
+      <h2 className="font-medium">Signups · last 14 days</h2>
+      <div className="mt-5 flex h-36 items-end gap-1.5">
+        {series.map((item) => (
+          <div key={item.date} className="flex flex-1 flex-col items-center gap-2">
+            <div
+              className="w-full rounded-t-md bg-wax/80"
+              style={{ height: `${Math.max(6, (item.count / max) * 100)}%` }}
+              title={`${item.date}: ${item.count}`}
+            />
+            <span className="text-[10px] text-muted">{item.date.slice(5)}</span>
+          </div>
+        ))}
+      </div>
+    </section>
   );
 }

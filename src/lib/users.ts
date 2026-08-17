@@ -223,6 +223,20 @@ export async function listPayments(limit = 100) {
   return (data ?? []) as SignetPaymentEvent[];
 }
 
+export async function countRowsSince(table: "signet_certificate_events" | "signet_login_events" | "signet_payments" | "signet_users", sinceIso: string) {
+  if (!isSupabaseConfigured()) return 0;
+  const supabase = getSupabaseAdmin();
+  const { count, error } = await supabase
+    .from(table)
+    .select("*", { count: "exact", head: true })
+    .gte("created_at", sinceIso);
+  if (error) {
+    if (isMissingTable(error)) return 0;
+    return 0;
+  }
+  return count ?? 0;
+}
+
 export async function listCertificateEvents(limit = 50) {
   if (!isSupabaseConfigured()) return [];
   const supabase = getSupabaseAdmin();
