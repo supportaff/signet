@@ -1,26 +1,26 @@
 import { ImageResponse } from "next/og";
 
-export const size = { width: 32, height: 32 };
+export const size = { width: 180, height: 180 };
 export const contentType = "image/png";
 
-export default function Icon() {
+export default function AppleIcon() {
   return new ImageResponse(
     (
       <div
         style={{
-          width: 32,
-          height: 32,
-          borderRadius: 16,
+          width: 180,
+          height: 180,
+          borderRadius: 90,
           background: "#C24A2A",
           color: "white",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          fontSize: 18,
+          fontSize: 96,
           fontWeight: 700,
           fontFamily: "Georgia, serif",
-          letterSpacing: "-0.04em",
-          border: "1.5px solid rgba(255,255,255,0.55)",
+          letterSpacing: "-0.06em",
+          border: "8px solid rgba(255,255,255,0.5)",
           boxSizing: "border-box",
         }}
       >
