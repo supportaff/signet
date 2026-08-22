@@ -21,6 +21,8 @@ const columns = [
       { href: "/tools/decode-csr", label: "Decode CSR" },
       { href: "/tools/convert", label: "PEM / DER / PFX" },
       { href: "/tools/security-headers", label: "HSTS / headers" },
+      { href: "/tools/subdomains", label: "Subdomain finder" },
+      { href: "/tools/nmap", label: "Web ports / nmap" },
       { href: "/tools/openssl", label: "OpenSSL commands" },
     ],
   },

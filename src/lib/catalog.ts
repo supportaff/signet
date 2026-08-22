@@ -40,6 +40,16 @@ export const TOOLS = [
     body: "See recently logged public certificates for a domain.",
   },
   {
+    href: "/tools/subdomains",
+    title: "Subdomain finder",
+    body: "List public names from CT logs plus a short DNS guess list.",
+  },
+  {
+    href: "/tools/nmap",
+    title: "Web port check + nmap commands",
+    body: "Probe 80/443/8080/8443 on a public host, then copy nmap for the rest.",
+  },
+  {
     href: "/tools/ssh-keygen",
     title: "SSH key generator",
     body: "Make an RSA or ECDSA key pair in the browser.",

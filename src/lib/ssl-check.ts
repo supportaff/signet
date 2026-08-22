@@ -122,25 +122,30 @@ function isBlockedV6(ip: string): boolean {
   return false;
 }
 
+export function parseHostname(input: string) {
+  return parseTarget(input.includes("://") || input.includes("/") ? input : `https://${input}`).hostname;
+}
+
+export async function resolvePublicHost(hostname: string) {
+  assertAllowedHost(hostname);
+  if (net.isIP(hostname)) {
+    return { hostname, ip: hostname };
+  }
+  const records = await dns.lookup(hostname, { all: true }).catch(() => {
+    throw new SslCheckError(400, "That hostname did not resolve.");
+  });
+  const publicRecords = records.filter((record) => !isBlockedIp(record.address));
+  if (!publicRecords.length) {
+    throw new SslCheckError(400, "That host resolves to a private or reserved address.");
+  }
+  const ip = (publicRecords.find((record) => record.family === 4) ?? publicRecords[0]).address;
+  return { hostname, ip };
+}
+
 export async function resolvePublicHttpsTarget(input: string) {
   const target = parseTarget(input);
-  assertAllowedHost(target.hostname);
-
-  let ip: string;
-  if (net.isIP(target.hostname)) {
-    ip = target.hostname;
-  } else {
-    const records = await dns.lookup(target.hostname, { all: true }).catch(() => {
-      throw new SslCheckError(400, "That hostname did not resolve.");
-    });
-    const publicRecords = records.filter((record) => !isBlockedIp(record.address));
-    if (!publicRecords.length) {
-      throw new SslCheckError(400, "That host resolves to a private or reserved address.");
-    }
-    ip = (publicRecords.find((record) => record.family === 4) ?? publicRecords[0]).address;
-  }
-
-  return { ...target, ip, input: input.trim() };
+  const resolved = await resolvePublicHost(target.hostname);
+  return { ...target, ip: resolved.ip, input: input.trim() };
 }
 
 export async function checkRemoteCertificate(input: string): Promise<SslCheckResult> {
