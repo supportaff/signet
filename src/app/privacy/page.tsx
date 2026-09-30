@@ -42,10 +42,10 @@ export default function PrivacyPage() {
       </p>
       <h2>Accounts</h2>
       <p>
-        You can sign in with Google. We store your Google account id, name,
-        email, plan, usage count, and login times so we can apply Free / Plus /
-        Studio limits. That account data is not a certificate and is not a
-        private key. You can delete the account from Settings.
+        You can sign in with Google. If you do, we store your Google account id,
+        name, email, and login times. That account data is not a certificate and
+        is not a private key. You can delete the account from Settings. Signing
+        in is not required to generate a certificate.
       </p>
       <h2>Live SSL checks</h2>
       <p>
@@ -53,11 +53,11 @@ export default function PrivacyPage() {
         connection to the public hostname you type and read the certificate that
         site presents. We do not store the lookup. Private keys are never sent.
       </p>
-      <h2>Payments</h2>
+      <h2>Booking</h2>
       <p>
-        Paid plans are processed by Dodo Payments when checkout is enabled.
-        SelfSignedCert receives plan and payment metadata only — never card
-        numbers and never private keys.
+        The consult page embeds a Calendly calendar so you can book a call.
+        Calendly receives the details you type into that widget. Do not paste a
+        private key there.
       </p>
       <h2>Analytics and contact</h2>
       <p>

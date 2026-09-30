@@ -12,7 +12,7 @@ export function Hero() {
         <div>
           <div className="animate-rise inline-flex items-center gap-2 rounded-full border border-line bg-surface px-3 py-1.5 text-xs text-ink-soft">
             <span className="h-1.5 w-1.5 rounded-full bg-sage" />
-            Zero server storage. Everything happens in this tab.
+            Free for everyone. Keys stay in this tab.
           </div>
           <h1
             className="display animate-rise mt-6 max-w-xl text-5xl text-ink sm:text-6xl lg:text-7xl"
@@ -36,12 +36,16 @@ export function Hero() {
               Generate a certificate
               <ArrowRight className="h-4 w-4" />
             </Link>
-            <Link href="/#check" className={cn(buttonVariants({ variant: "outline", size: "lg" }))}>
-              Check a site certificate
+            <Link href="/consult" className={cn(buttonVariants({ variant: "outline", size: "lg" }))}>
+              Book a security call
             </Link>
           </div>
           <p className="animate-rise mt-4 text-sm text-muted" style={{ animationDelay: "240ms" }}>
             Or{" "}
+            <Link href="/#check" className="text-ink-soft underline-offset-4 hover:text-ink hover:underline">
+              check a live certificate
+            </Link>{" "}
+            and{" "}
             <Link href="/tools" className="text-ink-soft underline-offset-4 hover:text-ink hover:underline">
               browse the free SSL tools
             </Link>

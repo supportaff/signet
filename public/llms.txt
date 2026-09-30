@@ -11,7 +11,13 @@ Chain validator: https://www.selfsignedcert.com/tools/validate-chain
 HSTS checker: https://www.selfsignedcert.com/tools/security-headers
 CT lookup: https://www.selfsignedcert.com/tools/ct-lookup
 SSH keys: https://www.selfsignedcert.com/tools/ssh-keygen
+Key match: https://www.selfsignedcert.com/tools/match-key
+CAA lookup: https://www.selfsignedcert.com/tools/caa
+PFX passphrase: https://www.selfsignedcert.com/tools/passphrase
+Book a call: https://www.selfsignedcert.com/consult
 Guides: https://www.selfsignedcert.com/guides
+
+Generation is free and unlimited. No account is required. Private keys stay in the browser.
 Privacy: https://selfsignedcert.com/privacy
 Terms: https://selfsignedcert.com/terms
 Contact: selfsignedcert@klickleads.com

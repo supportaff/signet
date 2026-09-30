@@ -62,11 +62,7 @@ export function softwareApplicationJsonLd() {
     operatingSystem: "Web",
     url: site.canonical,
     description: site.description,
-    offers: [
-      { "@type": "Offer", name: "Free", price: "0", priceCurrency: "USD" },
-      { "@type": "Offer", name: "Plus", price: "5", priceCurrency: "USD", billingIncrement: "P1M" },
-      { "@type": "Offer", name: "Studio", price: "12", priceCurrency: "USD", billingIncrement: "P1M" },
-    ],
+    offers: { "@type": "Offer", name: "Free", price: "0", priceCurrency: "USD" },
     featureList: [
       "Self-signed SSL certificate generator",
       "CSR generator",

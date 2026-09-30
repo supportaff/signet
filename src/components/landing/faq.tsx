@@ -5,11 +5,11 @@ export const faqs = [
   },
   {
     q: "How many certificates can I generate?",
-    a: "Free includes 3 certificates. Plus is $5/month for 25. Studio is $12/month for 50. Signed-in usage is stored in Supabase as metadata only. Checkout is Dodo Payments. Private keys are still never uploaded.",
+    a: "As many as you need. Generation is free, with no monthly cap and no checkout. Private keys are still created in the browser and never uploaded.",
   },
   {
     q: "Can I use this without an account?",
-    a: "You can browse tools and guides without signing in. Generating a certificate requires Google sign-in so we can apply the monthly Free / Plus / Studio limits. Private keys still never leave the browser.",
+    a: "Yes. The generator and the free tools work without signing in. Google sign-in is optional and only keeps account metadata such as your name. Private keys still never leave the browser.",
   },
   {
     q: "Which certificate type should I generate?",

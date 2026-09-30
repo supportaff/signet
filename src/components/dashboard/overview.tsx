@@ -6,16 +6,13 @@ import { buttonVariants } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/hooks/use-auth";
 import { useHistory } from "@/hooks/use-history";
-import { useQuota } from "@/hooks/use-quota";
 import { certTypeLabel } from "@/lib/cert/types";
 import { deleteHistoryItem } from "@/lib/history";
-import { planLabel } from "@/lib/plans";
 import { cn, formatDate, formatDateShort, hexColon } from "@/lib/utils";
 
 export function DashboardOverview() {
   const { user } = useAuth();
   const { items, ready } = useHistory();
-  const { quota } = useQuota();
 
   return (
     <div className="space-y-6">
@@ -31,25 +28,25 @@ export function DashboardOverview() {
           </p>
         </div>
         <Link
-          href={quota.allowed ? "/generate" : "/pricing"}
+          href="/generate"
           className={cn(buttonVariants({ variant: "wax" }))}
         >
           <Plus className="h-4 w-4" />
-          {quota.allowed ? "New certificate" : "Upgrade for more"}
+          New certificate
         </Link>
       </div>
 
       <div className="grid gap-3 sm:grid-cols-3">
         <Stat
           label="Generated"
-          value={`${quota.used} / ${quota.limit}`}
-          hint={`${planLabel(quota.plan)} this month`}
+          value={String(items.length)}
+          hint="On this device"
           icon={FileKey2}
         />
         <Stat
-          label="Remaining"
-          value={String(quota.remaining)}
-          hint={quota.allowed ? "On this plan" : "Limit reached"}
+          label="Price"
+          value="Free"
+          hint="No monthly cap"
           icon={ShieldCheck}
         />
         <Stat

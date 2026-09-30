@@ -308,17 +308,6 @@ export async function recordCertificateEvent(input: {
     await upsertSignetUser({ authId: input.authId });
   }
   const current = existing ?? (await getSignetUser(input.authId));
-  const usedThisPeriod = await usageThisPeriod(input.authId);
-  const quota = accountQuota(
-    {
-      plan: current?.plan ?? "free",
-      certs_used: current?.certs_used ?? 0,
-    },
-    usedThisPeriod,
-  );
-  if (!quota.allowed) {
-    throw new Error(`You've used all ${quota.limit} certificates on the ${quota.plan} plan this month.`);
-  }
 
   const { error: eventError } = await supabase.from("signet_certificate_events").insert({
     auth_id: input.authId,

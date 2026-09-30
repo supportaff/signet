@@ -41,9 +41,9 @@ export default function TermsPage() {
       </p>
       <h2>Accounts and plans</h2>
       <p>
-        Google sign-in identifies your account. Free, Plus, and Studio limits
-        apply to signed-in usage. Generating a certificate requires sign-in.
-        We may refuse or rate-limit abuse of the live SSL checker.
+        Google sign-in is optional. Generating a certificate does not require an
+        account, and there is no paid tier. We may refuse or rate-limit abuse of
+        the live lookup tools.
       </p>
       <h2>Limitation</h2>
       <p>

@@ -4,6 +4,7 @@ const rows = [
   ["Readable UI", "Yes", "No", "Sometimes"],
   ["Can the vendor leak your key?", "No", "No", "Yes"],
   ["PFX / CSR / mTLS", "Yes", "If you know how", "Varies"],
+  ["Price", "Free", "Free", "Often paid"],
 ];
 
 export function Comparison() {

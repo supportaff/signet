@@ -7,7 +7,7 @@ const columns = [
     title: "Product",
     links: [
       { href: "/generate", label: "SSL certificate generator" },
-      { href: "/pricing", label: "Pricing" },
+      { href: "/consult", label: "Book a cybersecurity call" },
       { href: "/#certificates", label: "Certificate types" },
       { href: "/dashboard", label: "Dashboard" },
     ],
@@ -23,7 +23,9 @@ const columns = [
       { href: "/tools/security-headers", label: "HSTS / headers" },
       { href: "/tools/subdomains", label: "Subdomain finder" },
       { href: "/tools/nmap", label: "Web ports / nmap" },
-      { href: "/tools/openssl", label: "OpenSSL commands" },
+      { href: "/tools/match-key", label: "Match a key" },
+      { href: "/tools/caa", label: "CAA lookup" },
+      { href: "/tools/passphrase", label: "PFX passphrase" },
     ],
   },
   {

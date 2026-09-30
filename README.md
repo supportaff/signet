@@ -9,9 +9,9 @@ Private keys, certificates, and PFX files are generated **entirely in the browse
 - Next.js 16 (App Router) + TypeScript
 - Tailwind CSS v4
 - `node-forge` for X.509 / CSR / PKCS#12
-- Google OAuth for accounts
-- Supabase for plan and login metadata only
-- Dodo Payments live checkout for Plus and Studio
+- Google OAuth for optional accounts
+- Supabase for account metadata only
+- Certificate generation is free and unlimited
 
 ## Develop
 

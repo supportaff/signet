@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { AdminVisuals } from "@/components/dashboard/admin-visuals";
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
 import { useAccount } from "@/hooks/use-account";
 import { planLabel } from "@/lib/plans";
@@ -178,6 +179,8 @@ export function UsersPanel({ embedded = false }: { embedded?: boolean }) {
         <Stat label="Lifetime certs" value={String(metrics?.lifetimeCerts ?? 0)} />
       </div>
 
+      <AdminVisuals metrics={metrics ?? null} />
+
       <SignupChart series={metrics?.signupSeries ?? []} />
 
       <Input
@@ -272,7 +275,7 @@ export function UsersPanel({ embedded = false }: { embedded?: boolean }) {
               {payments.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="px-5 py-12 text-center text-muted">
-                    No Dodo webhook events yet. A Plus or Studio checkout will appear here.
+                    No checkout events recorded. Older Plus and Studio payments still show here.
                   </td>
                 </tr>
               ) : (
@@ -354,9 +357,10 @@ function SignupChart({ series }: { series: { date: string; count: number }[] }) 
       <div className="mt-5 flex h-36 items-end gap-1.5">
         {series.map((item) => (
           <div key={item.date} className="flex flex-1 flex-col items-center gap-2">
+            <span className="text-[10px] text-ink-soft">{item.count || ""}</span>
             <div
-              className="w-full rounded-t-md bg-wax/80"
-              style={{ height: `${Math.max(6, (item.count / max) * 100)}%` }}
+              className="w-full rounded-t-md bg-wax"
+              style={{ height: `${Math.max(8, (item.count / max) * 100)}%` }}
               title={`${item.date}: ${item.count}`}
             />
             <span className="text-[10px] text-muted">{item.date.slice(5)}</span>

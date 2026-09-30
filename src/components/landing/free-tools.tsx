@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { FileSearch, FileText, Globe, Terminal } from "lucide-react";
+import { FileSearch, FileText, Globe, KeyRound, Shield, Terminal } from "lucide-react";
 
 const tools = [
   {
@@ -26,6 +26,18 @@ const tools = [
     title: "SSH key generator",
     body: "Mint an RSA or ECDSA key pair with Web Crypto. Copy the OpenSSH public key.",
   },
+  {
+    href: "/tools/match-key",
+    icon: KeyRound,
+    title: "Key match",
+    body: "Check that an RSA private key belongs to a certificate or CSR before you install it.",
+  },
+  {
+    href: "/tools/caa",
+    icon: Shield,
+    title: "CAA lookup",
+    body: "See which certificate authorities DNS allows to issue for a domain.",
+  },
 ];
 
 export function FreeTools() {
@@ -40,7 +52,7 @@ export function FreeTools() {
           These pages exist so you can check a certificate without pasting a
           private key into a stranger&apos;s form. Same privacy rule as the generator.
         </p>
-        <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {tools.map((tool) => (
             <Link
               key={tool.href}

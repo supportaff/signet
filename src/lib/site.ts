@@ -12,5 +12,5 @@ export const nav = [
   { href: "/generate", label: "Generator" },
   { href: "/tools", label: "Free tools" },
   { href: "/guides", label: "Guides" },
-  { href: "/pricing", label: "Pricing" },
+  { href: "/consult", label: "Book a call" },
 ];

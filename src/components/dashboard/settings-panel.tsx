@@ -8,11 +8,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { useAccount } from "@/hooks/use-account";
-import { useQuota } from "@/hooks/use-quota";
-import { openBillingPortal, startCheckout } from "@/lib/billing-client";
 import { clearSession, updateProfile } from "@/lib/auth";
 import { clearHistory } from "@/lib/history";
-import { PLAN_LIMITS, nextPlan, planLabel } from "@/lib/plans";
 import { formatDate } from "@/lib/utils";
 
 function statusTone(status?: string) {
@@ -23,10 +20,8 @@ function statusTone(status?: string) {
 
 export function SettingsPanel() {
   const router = useRouter();
-  const { user, account, tracking, isAuthenticated } = useAccount();
-  const { quota } = useQuota();
+  const { user, account, tracking } = useAccount();
   const [name, setName] = useState(user?.name ?? "");
-  const [busy, setBusy] = useState(false);
   const [confirm, setConfirm] = useState("");
   const [deleting, setDeleting] = useState(false);
 
@@ -38,20 +33,6 @@ export function SettingsPanel() {
     event.preventDefault();
     updateProfile({ name });
     toast.success("Display name updated on this device.");
-  };
-
-  const checkout = async (plan: "plus" | "studio") => {
-    if (!isAuthenticated || user?.id === "guest") {
-      window.location.href = "/login?next=/dashboard/settings";
-      return;
-    }
-    setBusy(true);
-    try {
-      await startCheckout(plan);
-    } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Checkout failed.");
-      setBusy(false);
-    }
   };
 
   const deleteAccount = async () => {
@@ -106,10 +87,10 @@ export function SettingsPanel() {
           hint={user?.email || "No email on this session"}
         />
         <StatusCard
-          label="Pricing tier"
-          value={planLabel(account?.plan ?? quota.plan)}
-          hint={`${quota.used} of ${quota.limit} certificates used`}
-          badge={account?.plan_status || "active"}
+          label="Certificates"
+          value="Unlimited"
+          hint="Free for every visitor"
+          badge="free"
         />
         <StatusCard
           label="Last login"
@@ -128,45 +109,10 @@ export function SettingsPanel() {
           <Input className="mt-1.5 max-w-md" value={user?.email ?? ""} disabled />
         </div>
         <div>
-          <Label>Plan status</Label>
+          <Label>Access</Label>
           <p className="mt-1.5 text-sm text-ink-soft">
-            {planLabel(quota.plan)} · {account?.plan_status || "active"} · {quota.used} of {quota.limit}{" "}
-            certificates used this month
+            Generation is free and unlimited. Google sign-in is optional.
           </p>
-          <div className="mt-3 flex flex-wrap gap-2">
-            {nextPlan(quota.plan) ? (
-              <Button
-                type="button"
-                variant="wax"
-                size="sm"
-                disabled={busy}
-                onClick={() => checkout(nextPlan(quota.plan)!)}
-              >
-                Upgrade to {planLabel(nextPlan(quota.plan)!)} ({PLAN_LIMITS[nextPlan(quota.plan)!]} certs)
-              </Button>
-            ) : null}
-            {quota.plan === "free" ? (
-              <Button type="button" variant="outline" size="sm" disabled={busy} onClick={() => checkout("studio")}>
-                Studio · $12
-              </Button>
-            ) : null}
-            {quota.plan !== "free" ? (
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={async () => {
-                  try {
-                    await openBillingPortal();
-                  } catch (error) {
-                    toast.error(error instanceof Error ? error.message : "Portal unavailable.");
-                  }
-                }}
-              >
-                Manage billing
-              </Button>
-            ) : null}
-          </div>
         </div>
         <Button type="submit" variant="outline">
           Save changes

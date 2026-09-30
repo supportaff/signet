@@ -18,13 +18,13 @@ export function FinalCta() {
             Open the generator
           </Link>
           <Link
-            href="/privacy"
+            href="/consult"
             className={cn(
               buttonVariants({ variant: "outline", size: "lg" }),
               "border-white/15 text-bg hover:bg-white/10",
             )}
           >
-            Read the privacy posture
+            Book a cybersecurity call
           </Link>
         </div>
       </div>

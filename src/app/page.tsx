@@ -7,7 +7,7 @@ import { FinalCta } from "@/components/landing/final-cta";
 import { FreeTools } from "@/components/landing/free-tools";
 import { Hero } from "@/components/landing/hero";
 import { HowItWorks } from "@/components/landing/how-it-works";
-import { PricingPreview } from "@/components/landing/pricing-preview";
+import { ConsultSection } from "@/components/landing/consult-section";
 import { SslCheckSection } from "@/components/landing/ssl-check-section";
 import { WorksWith } from "@/components/landing/works-with";
 import { JsonLd } from "@/components/seo/json-ld";
@@ -47,7 +47,7 @@ export default function Home() {
       <CertGuide />
       <BestPractices />
       <Comparison />
-      <PricingPreview />
+      <ConsultSection />
       <Faq />
       <FinalCta />
     </>

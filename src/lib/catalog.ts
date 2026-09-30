@@ -59,6 +59,21 @@ export const TOOLS = [
     title: "OpenSSL command cheat sheet",
     body: "Copy openssl req / x509 / pkcs12 commands.",
   },
+  {
+    href: "/tools/match-key",
+    title: "Certificate and key match",
+    body: "See if an RSA key belongs to a certificate or CSR. Compared in this tab.",
+  },
+  {
+    href: "/tools/caa",
+    title: "CAA record lookup",
+    body: "Which certificate authorities are allowed to issue for a domain.",
+  },
+  {
+    href: "/tools/passphrase",
+    title: "PFX passphrase generator",
+    body: "A random password for a PKCS#12 file. It never leaves the browser.",
+  },
 ] as const;
 
 export const GUIDES = [
