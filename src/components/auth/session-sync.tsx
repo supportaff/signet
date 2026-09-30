@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { getSession, setSession, type AuthUser } from "@/lib/auth";
+import { normalizeEmail } from "@/lib/admin-emails";
 import type { PlanId } from "@/lib/plans";
 
 export function SessionSync() {
@@ -20,7 +21,7 @@ export function SessionSync() {
         const next: AuthUser = {
           id: data.user.id,
           name: data.user.name || existing?.name || "Signed in",
-          email: data.user.email || existing?.email || "",
+          email: normalizeEmail(data.user.email || existing?.email),
           plan: existing?.id === data.user.id ? existing.plan : "free",
           createdAt: existing?.id === data.user.id ? existing.createdAt : new Date().toISOString(),
         };

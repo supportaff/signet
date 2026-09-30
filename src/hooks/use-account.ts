@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
+import { isAdminEmail } from "@/lib/admin-emails";
 import type { Quota } from "@/lib/plans";
 import type { SignetAccount, TrackingStatus } from "@/lib/users";
 
@@ -10,7 +11,7 @@ export function useAccount() {
   const [account, setAccount] = useState<SignetAccount | null>(null);
   const [quota, setQuota] = useState<Quota | null>(null);
   const [tracking, setTracking] = useState<TrackingStatus>("not_configured");
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(() => isAdminEmail(user?.email));
   const [adminConfigured, setAdminConfigured] = useState(false);
   const [ready, setReady] = useState(false);
 
@@ -20,7 +21,7 @@ export function useAccount() {
     const load = async () => {
       if (!isAuthenticated || user?.id === "guest") {
         setAccount(null);
-        setIsAdmin(false);
+        setIsAdmin(isAdminEmail(user?.email));
         setReady(true);
         return;
       }
@@ -38,7 +39,7 @@ export function useAccount() {
         setTracking(data.tracking ?? (data.configured ? "ok" : "not_configured"));
         setAccount(data.account ?? null);
         setQuota(data.quota ?? null);
-        setIsAdmin(Boolean(data.isAdmin));
+        setIsAdmin(Boolean(data.isAdmin) || isAdminEmail(user?.email) || isAdminEmail(data.account?.email));
         setAdminConfigured(Boolean(data.adminConfigured));
       } catch {
         if (!cancelled) setTracking("error");
@@ -60,7 +61,7 @@ export function useAccount() {
     account,
     quota,
     tracking,
-    isAdmin,
+    isAdmin: isAdmin || isAdminEmail(user?.email),
     adminConfigured,
     ready: ready && authReady,
     isAuthenticated,

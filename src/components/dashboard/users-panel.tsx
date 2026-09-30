@@ -52,7 +52,7 @@ type AdminPayload = {
   };
 };
 
-export function UsersPanel() {
+export function UsersPanel({ embedded = false }: { embedded?: boolean }) {
   const { isAdmin, ready } = useAccount();
   const [users, setUsers] = useState<SignetAccount[]>([]);
   const [logins, setLogins] = useState<SignetLoginEvent[]>([]);
@@ -115,15 +115,15 @@ export function UsersPanel() {
     }
   };
 
-  if (!ready) {
-    return (
-      <div className="mx-auto max-w-6xl px-5 py-16">
-        <div className="h-40 rounded-[28px] border border-line skeleton" />
-      </div>
-    );
-  }
-
   if (!isAdmin) {
+    if (embedded || !ready) {
+      if (embedded) return null;
+      return (
+        <div className="mx-auto max-w-6xl px-5 py-16">
+          <div className="h-40 rounded-[28px] border border-line skeleton" />
+        </div>
+      );
+    }
     return (
       <div className="mx-auto max-w-xl px-5 py-24 text-center">
         <p className="eyebrow">404</p>
@@ -143,9 +143,8 @@ export function UsersPanel() {
     );
   }
 
-  return (
-    <DashboardShell>
-    <div className="space-y-6">
+  const body = (
+    <div id="admin" className="space-y-6">
       <div>
         <p className="eyebrow">Admin analytics</p>
         <h1 className="mt-2 font-serif text-4xl tracking-tight">Users, signups, plans.</h1>
@@ -332,8 +331,10 @@ export function UsersPanel() {
         </section>
       </section>
     </div>
-    </DashboardShell>
   );
+
+  if (embedded) return body;
+  return <DashboardShell>{body}</DashboardShell>;
 }
 
 function Stat({ label, value }: { label: string; value: string }) {

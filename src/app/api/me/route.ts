@@ -8,7 +8,8 @@ import {
 } from "@/lib/users";
 import { isSupabaseConfigured } from "@/lib/supabase/admin";
 import { getSessionUser } from "@/lib/session";
-import { isAdminConfigured, isAdminEmail } from "@/lib/admin";
+import { isAdminConfigured, userIsAdmin } from "@/lib/admin";
+import { isAdminEmail } from "@/lib/admin-emails";
 
 export async function GET() {
   const user = await getSessionUser();
@@ -24,7 +25,7 @@ export async function GET() {
       trackingMessage: tracking.message,
       userId: user.id,
       user,
-      isAdmin: isAdminEmail(user.email),
+      isAdmin: await userIsAdmin(user),
       adminConfigured: isAdminConfigured(),
     });
   }
@@ -48,7 +49,7 @@ export async function GET() {
     account,
     quota: accountQuota(account, await usageThisPeriod(user.id)),
     user,
-    isAdmin: isAdminEmail(user.email),
+    isAdmin: isAdminEmail(user.email) || isAdminEmail(account.email),
     adminConfigured: isAdminConfigured(),
   });
 }

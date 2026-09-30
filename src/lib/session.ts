@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { SignJWT, jwtVerify } from "jose";
+import { normalizeEmail } from "@/lib/admin-emails";
 
 export const SESSION_COOKIE = "signet_session";
 export const OAUTH_STATE_COOKIE = "signet_oauth_state";
@@ -58,7 +59,7 @@ export async function getSessionUser(): Promise<SessionUser | null> {
     if (!payload.sub) return null;
     return {
       id: payload.sub,
-      email: String(payload.email || ""),
+      email: normalizeEmail(typeof payload.email === "string" ? payload.email : ""),
       name: String(payload.name || "Signed in"),
     };
   } catch {

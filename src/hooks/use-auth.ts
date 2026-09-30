@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { getSession, type AuthUser } from "@/lib/auth";
+import { normalizeEmail } from "@/lib/admin-emails";
 
 export function useAuth() {
   const [user, setUser] = useState<AuthUser | null>(null);
@@ -22,7 +23,7 @@ export function useAuth() {
           const next: AuthUser = {
             id: data.user.id,
             name: data.user.name || stored?.name || "Signed in",
-            email: data.user.email || stored?.email || "",
+            email: normalizeEmail(data.user.email || stored?.email),
             plan: stored?.id === data.user.id ? stored.plan : "free",
             createdAt: stored?.id === data.user.id ? stored.createdAt : new Date().toISOString(),
           };

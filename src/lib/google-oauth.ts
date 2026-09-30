@@ -1,4 +1,5 @@
 import { OAuth2Client } from "google-auth-library";
+import { normalizeEmail } from "@/lib/admin-emails";
 import { site } from "@/lib/site";
 
 const SCOPES = ["openid", "email", "profile"];
@@ -75,7 +76,7 @@ export async function googleUserFromCode(redirectUri: string, code: string) {
 
   return {
     id: `google:${payload.sub}`,
-    email: payload.email,
+    email: normalizeEmail(payload.email),
     name: payload.name || payload.given_name || payload.email.split("@")[0] || "Signed in",
   };
 }

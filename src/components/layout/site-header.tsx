@@ -8,6 +8,7 @@ import { Logo } from "@/components/brand/logo";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { useAuth } from "@/hooks/use-auth";
+import { isAdminEmail } from "@/lib/admin-emails";
 import { nav } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
@@ -34,6 +35,11 @@ export function SiteHeader() {
         </nav>
         <div className="hidden items-center gap-2 md:flex">
           <ThemeToggle />
+          {isAuthenticated && isAdminEmail(user?.email) ? (
+            <Link href="/dashboard" className={cn(buttonVariants({ variant: "outline", size: "sm" }))}>
+              Admin
+            </Link>
+          ) : null}
           {isAuthenticated ? (
             <Link
               href="/dashboard"
@@ -76,6 +82,11 @@ export function SiteHeader() {
                 {item.label}
               </Link>
             ))}
+            {isAuthenticated && isAdminEmail(user?.email) ? (
+              <Link href="/dashboard" onClick={() => setOpen(false)}>
+                Admin
+              </Link>
+            ) : null}
             {isAuthenticated ? (
               <Link href="/dashboard" onClick={() => setOpen(false)}>
                 {user?.name.split(" ")[0] ?? "Dashboard"}
