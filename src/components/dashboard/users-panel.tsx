@@ -2,13 +2,15 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import { Download } from "lucide-react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { AdminVisuals } from "@/components/dashboard/admin-visuals";
+import { AdminVisuals, type AdminMetrics } from "@/components/dashboard/admin-visuals";
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
 import { useAccount } from "@/hooks/use-account";
+import { downloadCsv } from "@/lib/csv";
 import { planLabel } from "@/lib/plans";
 import type {
   SignetAccount,
@@ -32,26 +34,10 @@ type AdminPayload = {
   logins?: SignetLoginEvent[];
   payments?: SignetPaymentEvent[];
   certificates?: SignetCertEvent[];
-  metrics?: {
-    users: number;
-    free: number;
-    plus: number;
-    studio: number;
-    active: number;
-    canceled: number;
-    paid: number;
-    paidPercent: number;
-    signupsToday: number;
-    signups7d: number;
-    signups30d: number;
-    certsThisMonth: number;
-    loginsThisMonth: number;
-    paymentsThisMonth: number;
-    transactions: number;
-    lifetimeCerts: number;
-    signupSeries: { date: string; count: number }[];
-  };
+  metrics?: AdminMetrics;
 };
+
+const PLAN_FILTERS = ["all", "free", "plus", "studio"] as const;
 
 export function UsersPanel({ embedded = false }: { embedded?: boolean }) {
   const { isAdmin, ready } = useAccount();
@@ -63,6 +49,7 @@ export function UsersPanel({ embedded = false }: { embedded?: boolean }) {
   const [tracking, setTracking] = useState<TrackingStatus>("not_configured");
   const [error, setError] = useState<string | null>(null);
   const [query, setQuery] = useState("");
+  const [planFilter, setPlanFilter] = useState<(typeof PLAN_FILTERS)[number]>("all");
   const [busyId, setBusyId] = useState<string | null>(null);
 
   const load = async () => {
@@ -88,13 +75,52 @@ export function UsersPanel({ embedded = false }: { embedded?: boolean }) {
 
   const filtered = useMemo(() => {
     const needle = query.trim().toLowerCase();
-    if (!needle) return users;
-    return users.filter((user) =>
-      [user.email, user.name, user.plan, user.plan_status, user.auth_id, user.dodo_customer_id]
+    return users.filter((user) => {
+      if (planFilter !== "all" && user.plan !== planFilter) return false;
+      if (!needle) return true;
+      return [user.email, user.name, user.plan, user.plan_status, user.auth_id, user.dodo_customer_id]
         .filter(Boolean)
-        .some((value) => String(value).toLowerCase().includes(needle)),
+        .some((value) => String(value).toLowerCase().includes(needle));
+    });
+  }, [users, query, planFilter]);
+
+  const exportUsers = () => {
+    if (!filtered.length) {
+      toast.error("No users to export.");
+      return;
+    }
+    const stamp = new Date().toISOString().slice(0, 10);
+    downloadCsv(
+      `selfsignedcert-users-${stamp}.csv`,
+      [
+        "name",
+        "email",
+        "plan",
+        "status",
+        "certs_used",
+        "login_count",
+        "last_login_at",
+        "created_at",
+        "auth_id",
+        "dodo_customer_id",
+        "dodo_subscription_id",
+      ],
+      filtered.map((row) => [
+        row.name || "",
+        row.email || "",
+        row.plan || "",
+        row.plan_status || "active",
+        String(row.certs_used ?? 0),
+        String(row.login_count ?? 0),
+        row.last_login_at || "",
+        row.created_at || "",
+        row.auth_id || "",
+        row.dodo_customer_id || "",
+        row.dodo_subscription_id || "",
+      ]),
     );
-  }, [users, query]);
+    toast.success(`Exported ${filtered.length} users.`);
+  };
 
   const remove = async (id: string) => {
     if (!window.confirm("Delete this account and its login history from Supabase?")) return;
@@ -146,11 +172,11 @@ export function UsersPanel({ embedded = false }: { embedded?: boolean }) {
 
   const body = (
     <div id="admin" className="space-y-6">
-      <div>
+      <div className="min-w-0">
         <p className="eyebrow">Admin analytics</p>
-        <h1 className="mt-2 font-serif text-4xl tracking-tight">Users, signups, plans.</h1>
+        <h1 className="mt-2 font-serif text-3xl tracking-tight sm:text-4xl">Users, signups, plans.</h1>
         <p className="mt-2 max-w-xl text-sm text-muted">
-          Account metadata only — certificates and private keys are never stored.
+          Account metadata only. Certificates and private keys are never stored.
         </p>
       </div>
 
@@ -160,40 +186,88 @@ export function UsersPanel({ embedded = false }: { embedded?: boolean }) {
         </div>
       ) : null}
 
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <Stat label="Signed-up users" value={String(metrics?.users ?? users.length)} />
-        <Stat label="New today" value={String(metrics?.signupsToday ?? 0)} />
-        <Stat label="New last 7 days" value={String(metrics?.signups7d ?? 0)} />
-        <Stat label="New last 30 days" value={String(metrics?.signups30d ?? 0)} />
-        <Stat label="Free" value={String(metrics?.free ?? 0)} />
-        <Stat label="Paid (Plus + Studio)" value={String(metrics?.paid ?? 0)} />
-        <Stat label="Plus" value={String(metrics?.plus ?? 0)} />
-        <Stat label="Studio" value={String(metrics?.studio ?? 0)} />
-        <Stat label="Paid conversion" value={`${metrics?.paidPercent ?? 0}%`} />
-        <Stat label="Active plans" value={String(metrics?.active ?? 0)} />
-        <Stat label="Canceled / expired" value={String(metrics?.canceled ?? 0)} />
-        <Stat label="Certs this month" value={String(metrics?.certsThisMonth ?? 0)} />
-        <Stat label="Logins this month" value={String(metrics?.loginsThisMonth ?? 0)} />
-        <Stat label="Payments this month" value={String(metrics?.paymentsThisMonth ?? 0)} />
-        <Stat label="Transactions logged" value={String(metrics?.transactions ?? payments.length)} />
-        <Stat label="Lifetime certs" value={String(metrics?.lifetimeCerts ?? 0)} />
-      </div>
-
       <AdminVisuals metrics={metrics ?? null} />
 
-      <SignupChart series={metrics?.signupSeries ?? []} />
-
-      <Input
-        value={query}
-        onChange={(event) => setQuery(event.target.value)}
-        placeholder="Search email, name, plan, or Dodo customer"
-      />
+      <div className="flex flex-col gap-3">
+        <div className="flex gap-1 overflow-x-auto pb-1">
+          {PLAN_FILTERS.map((plan) => (
+            <button
+              key={plan}
+              type="button"
+              aria-pressed={planFilter === plan}
+              className={cn(
+                "shrink-0 rounded-full border px-3 py-1.5 text-sm capitalize",
+                planFilter === plan ? "border-ink bg-ink text-bg" : "border-line text-ink-soft",
+              )}
+              onClick={() => setPlanFilter(plan)}
+            >
+              {plan}
+            </button>
+          ))}
+        </div>
+        <div className="flex flex-col gap-3 sm:flex-row">
+          <Input
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="Search email, name, plan, or customer id"
+          />
+          <Button variant="outline" className="w-full shrink-0 sm:w-auto" disabled={!filtered.length} onClick={exportUsers}>
+            <Download className="h-4 w-4" />
+            Export CSV ({filtered.length})
+          </Button>
+        </div>
+      </div>
 
       <section className="overflow-hidden rounded-[28px] border border-line bg-surface">
-        <div className="border-b border-line px-5 py-4">
+        <div className="flex flex-col gap-1 border-b border-line px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
           <h2 className="font-medium">Users and plan details</h2>
+          <p className="text-xs text-muted">{filtered.length} shown</p>
         </div>
-        <div className="overflow-x-auto">
+        <ul className="divide-y divide-line lg:hidden">
+          {filtered.length === 0 ? (
+            <li className="px-4 py-12 text-center text-sm text-muted">No users recorded yet.</li>
+          ) : (
+            filtered.map((row) => (
+              <li key={row.auth_id} className="space-y-3 px-4 py-4">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="truncate font-medium">{row.name || "No name"}</p>
+                    <p className="truncate text-xs text-muted">{row.email || row.auth_id}</p>
+                  </div>
+                  <Badge tone={statusTone(row.plan_status)}>{row.plan_status || "active"}</Badge>
+                </div>
+                <dl className="grid grid-cols-2 gap-2 text-xs">
+                  <div>
+                    <dt className="text-muted">Plan</dt>
+                    <dd>{planLabel(row.plan)}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-muted">Certs</dt>
+                    <dd>{row.certs_used}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-muted">Logins</dt>
+                    <dd>{row.login_count || 0}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-muted">Joined</dt>
+                    <dd>{row.created_at ? formatDate(row.created_at) : "—"}</dd>
+                  </div>
+                </dl>
+                <Button
+                  variant="danger"
+                  size="sm"
+                  className="w-full"
+                  disabled={busyId === row.auth_id}
+                  onClick={() => void remove(row.auth_id)}
+                >
+                  Delete
+                </Button>
+              </li>
+            ))
+          )}
+        </ul>
+        <div className="hidden overflow-x-auto lg:block">
           <table className="w-full min-w-[1080px] text-left text-sm">
             <thead className="text-xs uppercase tracking-[0.12em] text-muted">
               <tr>
@@ -256,10 +330,30 @@ export function UsersPanel({ embedded = false }: { embedded?: boolean }) {
       </section>
 
       <section className="overflow-hidden rounded-[28px] border border-line bg-surface">
-        <div className="border-b border-line px-5 py-4">
+        <div className="border-b border-line px-4 py-4 sm:px-5">
           <h2 className="font-medium">Transactions</h2>
         </div>
-        <div className="overflow-x-auto">
+        <ul className="divide-y divide-line md:hidden">
+          {payments.length === 0 ? (
+            <li className="px-4 py-10 text-center text-sm text-muted">
+              No checkout events recorded. Older Plus and Studio payments still show here.
+            </li>
+          ) : (
+            payments.map((row) => (
+              <li key={row.id} className="space-y-2 px-4 py-4 text-sm">
+                <div className="flex items-start justify-between gap-3">
+                  <p className="font-medium">{row.event_type}</p>
+                  <Badge tone={statusTone(row.status || undefined)}>{row.status || "—"}</Badge>
+                </div>
+                <p className="text-xs text-muted">{formatDate(row.created_at)} · {row.plan || "no plan"}</p>
+                <p className="truncate font-mono text-[11px] text-muted">
+                  {row.dodo_payment_id || row.dodo_subscription_id || row.auth_id || "—"}
+                </p>
+              </li>
+            ))
+          )}
+        </ul>
+        <div className="hidden overflow-x-auto md:block">
           <table className="w-full min-w-[860px] text-left text-sm">
             <thead className="text-xs uppercase tracking-[0.12em] text-muted">
               <tr>
@@ -307,9 +401,9 @@ export function UsersPanel({ embedded = false }: { embedded?: boolean }) {
           ) : (
             <ul className="mt-4 space-y-2 text-sm">
               {logins.map((login) => (
-                <li key={login.id} className="flex justify-between gap-4 text-ink-soft">
-                  <span>{login.email || login.auth_id}</span>
-                  <span className="text-muted">{formatDate(login.created_at)}</span>
+                <li key={login.id} className="flex items-baseline justify-between gap-3 text-ink-soft">
+                  <span className="min-w-0 truncate">{login.email || login.auth_id}</span>
+                  <span className="shrink-0 text-xs text-muted">{formatDate(login.created_at)}</span>
                 </li>
               ))}
             </ul>
@@ -322,11 +416,11 @@ export function UsersPanel({ embedded = false }: { embedded?: boolean }) {
           ) : (
             <ul className="mt-4 space-y-2 text-sm">
               {certificates.map((item) => (
-                <li key={item.id} className="flex justify-between gap-4 text-ink-soft">
-                  <span>
+                <li key={item.id} className="flex items-baseline justify-between gap-3 text-ink-soft">
+                  <span className="min-w-0 truncate">
                     {item.common_name || "certificate"} · {item.cert_type}
                   </span>
-                  <span className="text-muted">{formatDate(item.created_at)}</span>
+                  <span className="shrink-0 text-xs text-muted">{formatDate(item.created_at)}</span>
                 </li>
               ))}
             </ul>
@@ -340,33 +434,4 @@ export function UsersPanel({ embedded = false }: { embedded?: boolean }) {
   return <DashboardShell>{body}</DashboardShell>;
 }
 
-function Stat({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-3xl border border-line bg-surface p-5">
-      <p className="font-serif text-3xl">{value}</p>
-      <p className="mt-1 text-sm text-muted">{label}</p>
-    </div>
-  );
-}
 
-function SignupChart({ series }: { series: { date: string; count: number }[] }) {
-  const max = Math.max(1, ...series.map((item) => item.count));
-  return (
-    <section className="rounded-[28px] border border-line bg-surface p-6">
-      <h2 className="font-medium">Signups · last 14 days</h2>
-      <div className="mt-5 flex h-36 items-end gap-1.5">
-        {series.map((item) => (
-          <div key={item.date} className="flex flex-1 flex-col items-center gap-2">
-            <span className="text-[10px] text-ink-soft">{item.count || ""}</span>
-            <div
-              className="w-full rounded-t-md bg-wax"
-              style={{ height: `${Math.max(8, (item.count / max) * 100)}%` }}
-              title={`${item.date}: ${item.count}`}
-            />
-            <span className="text-[10px] text-muted">{item.date.slice(5)}</span>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}

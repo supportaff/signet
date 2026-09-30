@@ -63,7 +63,7 @@ export function SettingsPanel() {
     <div className="space-y-6">
       <div>
         <p className="eyebrow">Account</p>
-        <h1 className="mt-2 font-serif text-4xl tracking-tight">Settings</h1>
+        <h1 className="mt-2 font-serif text-3xl tracking-tight sm:text-4xl">Settings</h1>
         <p className="mt-2 max-w-xl text-sm text-muted">
           Your Google login, plan, and usage live in Supabase. Private keys are still never uploaded.
         </p>

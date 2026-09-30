@@ -252,6 +252,21 @@ export async function listCertificateEvents(limit = 50) {
   return (data ?? []) as SignetCertEvent[];
 }
 
+export async function listEventStamps(
+  table: "signet_certificate_events" | "signet_login_events",
+  sinceIso: string,
+) {
+  if (!isSupabaseConfigured()) return [] as { created_at: string; cert_type?: string }[];
+  const supabase = getSupabaseAdmin();
+  const query =
+    table === "signet_certificate_events"
+      ? supabase.from(table).select("created_at, cert_type")
+      : supabase.from(table).select("created_at");
+  const { data, error } = await query.gte("created_at", sinceIso).order("created_at", { ascending: true }).limit(4000);
+  if (error || !data) return [];
+  return data as unknown as { created_at: string; cert_type?: string }[];
+}
+
 export async function listRecentLogins(limit = 20) {
   if (!isSupabaseConfigured()) return [];
   const supabase = getSupabaseAdmin();
